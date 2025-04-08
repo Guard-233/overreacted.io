@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "opennext:build": "npx open-next@2 build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "patch-package",
-    "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && wrangler pages dev",
-    "deploy": "npm run pages:build && wrangler pages deploy"
+    "preview": "npx serve out",
+    "deploy": "opennextjs-cloudflare deploy && wrangler deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "colorjs.io": "^0.4.5",
@@ -26,11 +27,13 @@
     "shiki": "^0.14.5"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "1.0.0-beta.1",
     "autoprefixer": "^10.4.16",
     "eslint": "^8",
     "eslint-config-next": "13.5.6",
     "patch-package": "^8.0.0",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.5"
+    "tailwindcss": "^3.3.5",
+    "wrangler": "^3.30.1"
   }
 }
