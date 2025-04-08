@@ -1,8 +1,8 @@
 ---
 title: How Does React Tell a Class from a Function?
-date: '2018-12-02'
+date: "2018-12-02"
 spoiler: We talk about classes, new, instanceof, prototype chains, and API design.
-cta: 'react'
+cta: "react"
 ---
 
 Consider this `Greeting` component which is defined as a function:
@@ -32,7 +32,7 @@ When you want to render a `<Greeting />`, you don’t care how it’s defined:
 <Greeting />
 ```
 
-But *React itself* cares about the difference!
+But _React itself_ cares about the difference!
 
 If `Greeting` is a function, React needs to call it:
 
@@ -46,7 +46,7 @@ function Greeting() {
 const result = Greeting(props); // <p>Hello</p>
 ```
 
-But if `Greeting` is a class, React needs to instantiate it with the `new` operator and *then* call the `render` method on the just created instance:
+But if `Greeting` is a class, React needs to instantiate it with the `new` operator and _then_ call the `render` method on the just created instance:
 
 ```jsx
 // Your code
@@ -65,15 +65,15 @@ In both cases React’s goal is to get the rendered node (in this example, `<p>H
 
 **So how does React know if something is a class or a function?**
 
-Just like in my [previous post](/why-do-we-write-super-props/), **you don’t *need* to know this to be productive in React.** I didn’t know this for years. Please don’t turn this into an interview question. In fact, this post is more about JavaScript than it is about React.
+Just like in my [previous post](/why-do-we-write-super-props/), **you don’t _need_ to know this to be productive in React.** I didn’t know this for years. Please don’t turn this into an interview question. In fact, this post is more about JavaScript than it is about React.
 
-This blog is for a curious reader who wants to know *why* React works in a certain way. Are you that person? Then let’s dig in together.
+This blog is for a curious reader who wants to know _why_ React works in a certain way. Are you that person? Then let’s dig in together.
 
-**This is a long journey. Buckle up. This post doesn’t have much information about React itself, but we’ll go through some aspects of `new`, `this`, `class`, arrow functions, `prototype`, `__proto__`, `instanceof`, and how those things work together in JavaScript. Luckily, you don’t need to think about those as much when you *use* React. If you’re implementing React though...**
+**This is a long journey. Buckle up. This post doesn’t have much information about React itself, but we’ll go through some aspects of `new`, `this`, `class`, arrow functions, `prototype`, `__proto__`, `instanceof`, and how those things work together in JavaScript. Luckily, you don’t need to think about those as much when you _use_ React. If you’re implementing React though...**
 
 (If you really just want to know the answer, scroll to the very end.)
 
-----
+---
 
 First, we need to understand why it’s important to treat functions and classes differently. Note how we use the `new` operator when calling a class:
 
@@ -90,7 +90,7 @@ Let’s get a rough sense of what the `new` operator does in JavaScript.
 
 ---
 
-In the old days, JavaScript did not have classes. However, you could express a similar pattern to classes using plain functions. **Concretely, you can use *any* function in a role similar to a class constructor by adding `new` before its call:**
+In the old days, JavaScript did not have classes. However, you could express a similar pattern to classes using plain functions. **Concretely, you can use _any_ function in a role similar to a class constructor by adding `new` before its call:**
 
 ```jsx
 // Just a function
@@ -98,8 +98,8 @@ function Person(name) {
   this.name = name;
 }
 
-var fred = new Person('Fred'); // ✅ Person {name: 'Fred'}
-var george = Person('George'); // 🔴 Won’t work
+var fred = new Person("Fred"); // ✅ Person {name: 'Fred'}
+var george = Person("George"); // 🔴 Won’t work
 ```
 
 You can still write code like this today! Try it in DevTools.
@@ -111,7 +111,7 @@ By adding `new` before the call, we say: “Hey JavaScript, I know `Person` is j
 That’s what the `new` operator does.
 
 ```jsx
-var fred = new Person('Fred'); // Same object as `this` inside `Person`
+var fred = new Person("Fred"); // Same object as `this` inside `Person`
 ```
 
 The `new` operator also makes anything we put on `Person.prototype` available on the `fred` object:
@@ -120,11 +120,11 @@ The `new` operator also makes anything we put on `Person.prototype` available on
 function Person(name) {
   this.name = name;
 }
-Person.prototype.sayHi = function() {
-  alert('Hi, I am ' + this.name);
-}
+Person.prototype.sayHi = function () {
+  alert("Hi, I am " + this.name);
+};
 
-var fred = new Person('Fred');
+var fred = new Person("Fred");
 fred.sayHi();
 ```
 
@@ -140,26 +140,26 @@ class Person {
     this.name = name;
   }
   sayHi() {
-    alert('Hi, I am ' + this.name);
+    alert("Hi, I am " + this.name);
   }
 }
 
-let fred = new Person('Fred');
+let fred = new Person("Fred");
 fred.sayHi();
 ```
 
-*Capturing developer’s intent* is important in language and API design.
+_Capturing developer’s intent_ is important in language and API design.
 
 If you write a function, JavaScript can’t guess if it’s meant to be called like `alert()` or if it serves as a constructor like `new Person()`. Forgetting to specify `new` for a function like `Person` would lead to confusing behavior.
 
 **Class syntax lets us say: “This isn’t just a function — it’s a class and it has a constructor”.** If you forget `new` when calling it, JavaScript will raise an error:
 
 ```jsx
-let fred = new Person('Fred');
+let fred = new Person("Fred");
 // ✅  If Person is a function: works fine
 // ✅  If Person is a class: works fine too
 
-let george = Person('George'); // We forgot `new`
+let george = Person("George"); // We forgot `new`
 // 😳 If Person is a constructor-like function: confusing behavior
 // 🔴 If Person is a class: fails immediately
 ```
@@ -197,9 +197,9 @@ function Person(name) {
   this.name = name;
 }
 
-new Person('Fred'); // ✅ Okay
-Person('George');   // 🔴 Cannot call a class as a function
-``` 
+new Person("Fred"); // ✅ Okay
+Person("George"); // 🔴 Cannot call a class as a function
+```
 
 You might have seen code like this in your bundle. That’s what all those `_classCallCheck` functions do. (You can reduce the bundle size by opting into the “loose mode” with no checks but this might complicate your eventual transition to real native classes.)
 
@@ -207,9 +207,9 @@ You might have seen code like this in your bundle. That’s what all those `_cla
 
 By now, you should roughly understand the difference between calling something with `new` or without `new`:
 
-|  | `new Person()` | `Person()` |
-|---|---|---|
-| `class` | ✅ `this` is a `Person` instance | 🔴 `TypeError`
+|            | `new Person()`                   | `Person()`                           |
+| ---------- | -------------------------------- | ------------------------------------ |
+| `class`    | ✅ `this` is a `Person` instance | 🔴 `TypeError`                       |
 | `function` | ✅ `this` is a `Person` instance | 😳 `this` is `window` or `undefined` |
 
 This is why it’s important for React to call your component correctly. **If your component is defined as a class, React needs to use `new` when calling it.**
@@ -231,7 +231,7 @@ function Greeting() {
 }
 ```
 
-That could be tolerable though. There are two *other* reasons that kill this idea.
+That could be tolerable though. There are two _other_ reasons that kill this idea.
 
 ---
 
@@ -242,20 +242,20 @@ const Greeting = () => <p>Hello</p>;
 new Greeting(); // 🔴 Greeting is not a constructor
 ```
 
-This behavior is intentional and follows from the design of arrow functions. One of the main perks of arrow functions is that they *don’t* have their own `this` value — instead, `this` is resolved from the closest regular function:
+This behavior is intentional and follows from the design of arrow functions. One of the main perks of arrow functions is that they _don’t_ have their own `this` value — instead, `this` is resolved from the closest regular function:
 
 ```jsx {2,6,7}
 class Friends extends React.Component {
   render() {
     const friends = this.props.friends;
-    return friends.map(friend =>
+    return friends.map((friend) => (
       <Friend
         // `this` is resolved from the `render` method
         size={this.props.size}
         name={friend.name}
         key={friend.id}
       />
-    );
+    ));
   }
 }
 ```
@@ -266,16 +266,18 @@ Okay, so **arrow functions don’t have their own `this`.** But that means they 
 const Person = (name) => {
   // 🔴 This wouldn’t make sense!
   this.name = name;
-}
+};
 ```
 
-Therefore, **JavaScript disallows calling an arrow function with `new`.** If you do it, you probably made a mistake anyway, and it’s best to tell you early. This is similar to how JavaScript doesn’t let you call a class *without* `new`.
+Therefore, **JavaScript disallows calling an arrow function with `new`.** If you do it, you probably made a mistake anyway, and it’s best to tell you early. This is similar to how JavaScript doesn’t let you call a class _without_ `new`.
 
 This is nice but it also foils our plan. React can’t just call `new` on everything because it would break arrow functions! We could try detecting arrow functions specifically by their lack of `prototype`, and not `new` just them:
 
 ```jsx
-(() => {}).prototype // undefined
-(function() {}).prototype // {constructor: f}
+(() => {}).prototype(
+  // undefined
+  function () {}
+).prototype; // {constructor: f}
 ```
 
 But this [wouldn’t work](https://github.com/facebook/react/issues/4599#issuecomment-136562930) for functions compiled with Babel. This might not be a big deal, but there is another reason that makes this approach a dead end.
@@ -286,7 +288,7 @@ Another reason we can’t always use `new` is that it would preclude React from 
 
 ```jsx
 function Greeting() {
-  return 'Hello';
+  return "Hello";
 }
 
 Greeting(); // ✅ 'Hello'
@@ -295,7 +297,7 @@ new Greeting(); // 😳 Greeting {}
 
 This, again, has to do with the quirks of the [`new` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new) design. As we saw earlier, `new` tells the JavaScript engine to create an object, make that object `this` inside the function, and later give us that object as a result of `new`.
 
-However, JavaScript also allows a function called with `new` to *override* the return value of `new` by returning some other object. Presumably, this was considered useful for patterns like pooling where we want to reuse instances:
+However, JavaScript also allows a function called with `new` to _override_ the return value of `new` by returning some other object. Presumably, this was considered useful for patterns like pooling where we want to reuse instances:
 
 ```jsx {1-2,7-8,17-18}
 // Created lazily
@@ -318,7 +320,7 @@ var b = new Vector(0, 0);
 var c = new Vector(0, 0); // 😲 b === c
 ```
 
-However, `new` also *completely ignores* a function’s return value if it’s *not* an object. If you return a string or a number, it’s like there was no `return` at all.
+However, `new` also _completely ignores_ a function’s return value if it’s _not_ an object. If you return a string or a number, it’s like there was no `return` at all.
 
 ```jsx
 function Answer() {
@@ -335,7 +337,7 @@ That’s unacceptable so we need to compromise.
 
 ---
 
-What did we learn so far? React needs to call classes (including Babel output) *with* `new` but it needs to call regular functions or arrow functions (including Babel output) *without* `new`. And there is no reliable way to distinguish them.
+What did we learn so far? React needs to call classes (including Babel output) _with_ `new` but it needs to call regular functions or arrow functions (including Babel output) _without_ `new`. And there is no reliable way to distinguish them.
 
 **If we can’t solve a general problem, can we solve a more specific one?**
 
@@ -375,11 +377,11 @@ What’s the `prototype` property on a function or a class, then? **It’s the `
 function Person(name) {
   this.name = name;
 }
-Person.prototype.sayHi = function() {
-  alert('Hi, I am ' + this.name);
-}
+Person.prototype.sayHi = function () {
+  alert("Hi, I am " + this.name);
+};
 
-var fred = new Person('Fred'); // Sets `fred.__proto__` to `Person.prototype`
+var fred = new Person("Fred"); // Sets `fred.__proto__` to `Person.prototype`
 ```
 
 And that `__proto__` chain is how JavaScript looks up properties:
@@ -421,9 +423,9 @@ console.log(c.__proto__); // Greeting.prototype
 console.log(c.__proto__.__proto__); // React.Component.prototype
 console.log(c.__proto__.__proto__.__proto__); // Object.prototype
 
-c.render();      // Found on c.__proto__ (Greeting.prototype)
-c.setState();    // Found on c.__proto__.__proto__ (React.Component.prototype)
-c.toString();    // Found on c.__proto__.__proto__.__proto__ (Object.prototype)
+c.render(); // Found on c.__proto__ (Greeting.prototype)
+c.setState(); // Found on c.__proto__.__proto__ (React.Component.prototype)
+c.toString(); // Found on c.__proto__.__proto__.__proto__ (Object.prototype)
 ```
 
 In other words, **when you use classes, an instance’s `__proto__` chain “mirrors” the class hierarchy:**
@@ -465,7 +467,7 @@ let greeting = new Greeting();
 console.log(greeting instanceof Greeting); // true
 // greeting (🕵️‍ We start here)
 //   .__proto__ → Greeting.prototype (✅ Found it!)
-//     .__proto__ → React.Component.prototype 
+//     .__proto__ → React.Component.prototype
 //       .__proto__ → Object.prototype
 
 console.log(greeting instanceof React.Component); // true
@@ -483,7 +485,7 @@ console.log(greeting instanceof Object); // true
 console.log(greeting instanceof Banana); // false
 // greeting (🕵️‍ We start here)
 //   .__proto__ → Greeting.prototype
-//     .__proto__ → React.Component.prototype 
+//     .__proto__ → React.Component.prototype
 //       .__proto__ → Object.prototype (🙅‍ Did not find it!)
 ```
 
@@ -503,7 +505,7 @@ And that check is how we could determine if something is a React component class
 
 That’s not what React does though. 😳
 
-One caveat to the `instanceof` solution is that it doesn’t work when there are multiple copies of React on the page, and the component we’re checking inherits from *another* React copy’s `React.Component`. Mixing multiple copies of React in a single project is bad for several reasons but historically we’ve tried to avoid issues when possible. (With Hooks, we [might need to](https://github.com/facebook/react/issues/13991) force deduplication though.)
+One caveat to the `instanceof` solution is that it doesn’t work when there are multiple copies of React on the page, and the component we’re checking inherits from _another_ React copy’s `React.Component`. Mixing multiple copies of React in a single project is bad for several reasons but historically we’ve tried to avoid issues when possible. (With Hooks, we [might need to](https://github.com/facebook/react/issues/13991) force deduplication though.)
 
 One other possible heuristic could be to check for presence of a `render` method on the prototype. However, at the time it [wasn’t clear](https://github.com/facebook/react/issues/4599#issuecomment-129714112) how the component API would evolve. Every check has a cost so we wouldn’t want to add more than one. This would also not work if `render` was defined as an instance method, such as with the class property syntax.
 
@@ -523,7 +525,7 @@ console.log(Greeting.isReactClass); // ✅ Yes
 
 However, some class implementations we wanted to target [did not](https://github.com/scala-js/scala-js/issues/1900) copy static properties (or set the non-standard `__proto__`), so the flag was getting lost.
 
-This is why React [moved](https://github.com/facebook/react/pull/5021) this flag to `React.Component.prototype`: 
+This is why React [moved](https://github.com/facebook/react/pull/5021) this flag to `React.Component.prototype`:
 
 ```jsx
 // Inside React
@@ -545,7 +547,7 @@ If you don’t extend `React.Component`, React won’t find `isReactComponent` o
 
 ---
 
-You might say this story is a bit of a bait-and-switch. **The actual solution is really simple, but I went on a huge tangent to explain *why* React ended up with this solution, and what the alternatives were.**
+You might say this story is a bit of a bait-and-switch. **The actual solution is really simple, but I went on a huge tangent to explain _why_ React ended up with this solution, and what the alternatives were.**
 
 In my experience, that’s often the case with library APIs. For an API to be simple to use, you often need to consider the language semantics (possibly, for several languages, including future directions), runtime performance, ergonomics with and without compile-time steps, the state of the ecosystem and packaging solutions, early warnings, and many other things. The end result might not always be the most elegant, but it must be practical.
 

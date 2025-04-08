@@ -1,11 +1,11 @@
 ---
 title: React as a UI Runtime
-date: '2019-02-02'
+date: "2019-02-02"
 spoiler: An in-depth description of the React programming model.
-cta: 'react'
+cta: "react"
 ---
 
-Most tutorials introduce React as a UI library. This makes sense because React *is* a UI library. That’s literally what the tagline says!
+Most tutorials introduce React as a UI library. This makes sense because React _is_ a UI library. That’s literally what the tagline says!
 
 ![React homepage screenshot: "A JavaScript library for building user interfaces"](./react.png)
 
@@ -17,7 +17,7 @@ I’ve written about the challenges of creating [user interfaces](/the-elements-
 
 **Note: If you’re _learning_ React, check out [the docs](https://reactjs.org/docs/getting-started.html#learn-react) instead.**
 
-<p><font size="60">⚠️</font></p>
+<font size="60">⚠️</font>
 
 **This is a deep dive — THIS IS NOT a beginner-friendly post.** In this post, I’m describing most of the React programming model from first principles. I don’t explain how to use it — just how it works.
 
@@ -33,15 +33,15 @@ With that disclaimer out of the way, let’s go!
 
 Some programs output numbers. Other programs output poems. Different languages and their runtimes are often optimized for a particular set of use cases, and React is no exception to that.
 
-React programs usually output **a tree that may change over time**. It might be a [DOM tree](https://www.npmjs.com/package/react-dom), an [iOS hierarchy](https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/View%20Hierarchy.html), a tree of [PDF primitives](https://react-pdf.org/), or even of [JSON objects](https://reactjs.org/docs/test-renderer.html). However, usually, we want to represent some UI with it. We’ll call it a “*host* tree” because it is a part of the *host environment* outside of React — like DOM or iOS. The host tree usually has [its](https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild) [own](https://developer.apple.com/documentation/uikit/uiview/1622616-addsubview) imperative API. React is a layer on top of it.
+React programs usually output **a tree that may change over time**. It might be a [DOM tree](https://www.npmjs.com/package/react-dom), an [iOS hierarchy](https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/View%20Hierarchy.html), a tree of [PDF primitives](https://react-pdf.org/), or even of [JSON objects](https://reactjs.org/docs/test-renderer.html). However, usually, we want to represent some UI with it. We’ll call it a “_host_ tree” because it is a part of the _host environment_ outside of React — like DOM or iOS. The host tree usually has [its](https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild) [own](https://developer.apple.com/documentation/uikit/uiview/1622616-addsubview) imperative API. React is a layer on top of it.
 
 So what is React useful for? Very abstractly, it helps you write a program that predictably manipulates a complex host tree in response to external events like interactions, network responses, timers, and so on.
 
 A specialized tool works better than a generic one when it can impose and benefit from particular constraints. React makes a bet on two principles:
 
-* **Stability.** The host tree is relatively stable and most updates don’t radically change its overall structure. If an app rearranged all its interactive elements into a completely different combination every second, it would be difficult to use. Where did that button go? Why is my screen dancing?
+- **Stability.** The host tree is relatively stable and most updates don’t radically change its overall structure. If an app rearranged all its interactive elements into a completely different combination every second, it would be difficult to use. Where did that button go? Why is my screen dancing?
 
-* **Regularity.** The host tree can be broken down into UI patterns that look and behave consistently (such as buttons, lists, avatars) rather than random shapes.
+- **Regularity.** The host tree can be broken down into UI patterns that look and behave consistently (such as buttons, lists, avatars) rather than random shapes.
 
 **These principles happen to be true for most UIs.** However, React is ill-suited when there are no stable “patterns” in the output. For example, React may help you write a Twitter client but won’t be very useful for a [3D pipes screensaver](https://www.youtube.com/watch?v=Uzx9ArZ7MUU).
 
@@ -59,7 +59,7 @@ There is usually an API to manipulate host instances. For example, the DOM provi
 
 ## Renderers
 
-A *renderer* teaches React to talk to a specific host environment and manage its host instances. React DOM, React Native, and even [Ink](https://mobile.twitter.com/vadimdemedes/status/1089344289102942211) are React renderers. You can also [create your own React renderer](https://github.com/facebook/react/tree/master/packages/react-reconciler).
+A _renderer_ teaches React to talk to a specific host environment and manage its host instances. React DOM, React Native, and even [Ink](https://mobile.twitter.com/vadimdemedes/status/1089344289102942211) are React renderers. You can also [create your own React renderer](https://github.com/facebook/react/tree/master/packages/react-reconciler).
 
 React renderers can work in one of two modes.
 
@@ -71,9 +71,9 @@ As a React user, you never need to think about these modes. I only want to highl
 
 ## React Elements
 
-In the host environment, a host instance (like a DOM node) is the smallest building block. In React, the smallest building block is a *React element*.
+In the host environment, a host instance (like a DOM node) is the smallest building block. In React, the smallest building block is a _React element_.
 
-A React element is a plain JavaScript object. It can *describe* a host instance.
+A React element is a plain JavaScript object. It can _describe_ a host instance.
 
 ```jsx
 // JSX is a syntax sugar for these objects.
@@ -84,7 +84,7 @@ A React element is a plain JavaScript object. It can *describe* a host instance.
 }
 ```
 
-A React element is lightweight and has no host instance tied to it. Again, it is merely a *description* of what you want to see on the screen.
+A React element is lightweight and has no host instance tied to it. Again, it is merely a _description_ of what you want to see on the screen.
 
 Like host instances, React elements can form a tree:
 
@@ -108,11 +108,11 @@ Like host instances, React elements can form a tree:
 }
 ```
 
-*(Note: I omitted [some properties](/why-do-react-elements-have-typeof-property/) that aren’t important to this explanation.)*
+_(Note: I omitted [some properties](/why-do-react-elements-have-typeof-property/) that aren’t important to this explanation.)_
 
 However, remember that **React elements don’t have their own persistent identity.** They’re meant to be re-created and thrown away all the time.
 
-React elements are immutable. For example, you can’t change the children or a property of a React element. If you want to render something different later, you will *describe* it with a new React element tree created from scratch.
+React elements are immutable. For example, you can’t change the children or a property of a React element. If you want to render something different later, you will _describe_ it with a new React element tree created from scratch.
 
 I like to think of React elements as being like frames in a movie. They capture what the UI should look like at a specific point in time. They don’t change.
 
@@ -126,7 +126,7 @@ For example, React DOM entry point is `ReactDOM.render`:
 ReactDOM.render(
   // { type: 'button', props: { className: 'blue' } }
   <button className="blue" />,
-  document.getElementById('container')
+  document.getElementById("container")
 );
 ```
 
@@ -146,8 +146,8 @@ function createHostInstance(reactElement) {
 In our example, effectively React will do this:
 
 ```jsx {1,2}
-let domNode = document.createElement('button');
-domNode.className = 'blue';
+let domNode = document.createElement("button");
+domNode.className = "blue";
 
 domContainer.appendChild(domNode);
 ```
@@ -161,7 +161,7 @@ What happens if we call `ReactDOM.render()` twice with the same container?
 ```jsx {2,11}
 ReactDOM.render(
   <button className="blue" />,
-  document.getElementById('container')
+  document.getElementById("container")
 );
 
 // ... later ...
@@ -170,21 +170,21 @@ ReactDOM.render(
 // or merely update a property on an existing one?
 ReactDOM.render(
   <button className="red" />,
-  document.getElementById('container')
+  document.getElementById("container")
 );
 ```
 
-Again, React’s job is to *make the host tree match the provided React element tree*. The process of figuring out *what* to do to the host instance tree in response to new information is sometimes called [reconciliation](https://reactjs.org/docs/reconciliation.html).
+Again, React’s job is to _make the host tree match the provided React element tree_. The process of figuring out _what_ to do to the host instance tree in response to new information is sometimes called [reconciliation](https://reactjs.org/docs/reconciliation.html).
 
 There are two ways to go about it. A simplified version of React could blow away the existing tree and re-create it from scratch:
 
 ```jsx
-let domContainer = document.getElementById('container');
+let domContainer = document.getElementById("container");
 // Clear the tree
-domContainer.innerHTML = '';
+domContainer.innerHTML = "";
 // Create the new host instance tree
-let domNode = document.createElement('button');
-domNode.className = 'red';
+let domNode = document.createElement("button");
+domNode.className = "red";
 domContainer.appendChild(domNode);
 ```
 
@@ -193,12 +193,12 @@ But in DOM, this is slow and loses important information like focus, selection, 
 ```jsx
 let domNode = domContainer.firstChild;
 // Update existing host instance
-domNode.className = 'red';
+domNode.className = "red";
 ```
 
 In other words, React needs to decide when to _update_ an existing host instance to match a new React element, and when to create a _new_ one.
 
-This raises a question of *identity*. The React element may be different every time, but when does it refer to the same host instance conceptually?
+This raises a question of _identity_. The React element may be different every time, but when does it refer to the same host instance conceptually?
 
 In our example, it’s simple. We used to render a `<button>` as a first (and only) child, and we want to render a `<button>` in the same place again. We already have a `<button>` host instance there so why re-create it? Let’s just reuse it.
 
@@ -214,14 +214,14 @@ Here is an example with comments showing roughly what React does:
 // domContainer.appendChild(domNode);
 ReactDOM.render(
   <button className="blue" />,
-  document.getElementById('container')
+  document.getElementById("container")
 );
 
 // Can reuse host instance? Yes! (button → button)
 // domNode.className = 'red';
 ReactDOM.render(
   <button className="red" />,
-  document.getElementById('container')
+  document.getElementById("container")
 );
 
 // Can reuse host instance? No! (button → p)
@@ -229,17 +229,11 @@ ReactDOM.render(
 // domNode = document.createElement('p');
 // domNode.textContent = 'Hello';
 // domContainer.appendChild(domNode);
-ReactDOM.render(
-  <p>Hello</p>,
-  document.getElementById('container')
-);
+ReactDOM.render(<p>Hello</p>, document.getElementById("container"));
 
 // Can reuse host instance? Yes! (p → p)
 // domNode.textContent = 'Goodbye';
-ReactDOM.render(
-  <p>Goodbye</p>,
-  document.getElementById('container')
-);
+ReactDOM.render(<p>Goodbye</p>, document.getElementById("container"));
 ```
 
 The same heuristic is used for child trees. For example, when we update a `<dialog>` with two `<button>`s inside, React first decides whether to re-use the `<dialog>`, and then repeats this decision procedure for each child.
@@ -271,9 +265,9 @@ ReactDOM.render(
 
 In this example, the `<input>` host instance would get re-created. React would walk the element tree, comparing it with the previous version:
 
-* `dialog → dialog`: Can reuse the host instance? **Yes — the type matches.**
-  * `input → p`: Can reuse the host instance? **No, the type has changed!** Need to remove the existing `input` and create a new `p` host instance.
-  * `(nothing) → input`: Need to create a new `input` host instance.
+- `dialog → dialog`: Can reuse the host instance? **Yes — the type matches.**
+  - `input → p`: Can reuse the host instance? **No, the type has changed!** Need to remove the existing `input` and create a new `p` host instance.
+  - `(nothing) → input`: Need to create a new `input` host instance.
 
 So effectively the update code executed by React would be like:
 
@@ -281,15 +275,15 @@ So effectively the update code executed by React would be like:
 let oldInputNode = dialogNode.firstChild;
 dialogNode.removeChild(oldInputNode);
 
-let pNode = document.createElement('p');
-pNode.textContent = 'I was just added here!';
+let pNode = document.createElement("p");
+pNode.textContent = "I was just added here!";
 dialogNode.appendChild(pNode);
 
-let newInputNode = document.createElement('input');
+let newInputNode = document.createElement("input");
 dialogNode.appendChild(newInputNode);
 ```
 
-This is not great because *conceptually* the `<input>` hasn’t been *replaced* with `<p>` — it just moved. We don’t want to lose its selection, focus state, and content due to re-creating the DOM.
+This is not great because _conceptually_ the `<input>` hasn’t been _replaced_ with `<p>` — it just moved. We don’t want to lose its selection, focus state, and content due to re-creating the DOM.
 
 While this problem has an easy fix (which we’ll get to in a minute), it doesn’t occur often in React applications. It’s interesting to see why.
 
@@ -317,18 +311,15 @@ function Form({ showMessage }) {
   let message = null;
   if (showMessage) {
     message = {
-      type: 'p',
-      props: { children: 'I was just added here!' }
+      type: "p",
+      props: { children: "I was just added here!" },
     };
   }
   return {
-    type: 'dialog',
+    type: "dialog",
     props: {
-      children: [
-        message,
-        { type: 'input', props: {} }
-      ]
-    }
+      children: [message, { type: "input", props: {} }],
+    },
   };
 }
 ```
@@ -337,16 +328,16 @@ function Form({ showMessage }) {
 
 If `showMessage` changes from `false` to `true`, React would walk the element tree, comparing it with the previous version:
 
-* `dialog → dialog`: Can reuse the host instance? **Yes — the type matches.**
-  * `(null) → p`: Need to insert a new `p` host instance.
-  * `input → input`: Can reuse the host instance? **Yes — the type matches.**
+- `dialog → dialog`: Can reuse the host instance? **Yes — the type matches.**
+  - `(null) → p`: Need to insert a new `p` host instance.
+  - `input → input`: Can reuse the host instance? **Yes — the type matches.**
 
 And the code executed by React would be similar to this:
 
 ```jsx
 let inputNode = dialogNode.firstChild;
-let pNode = document.createElement('p');
-pNode.textContent = 'I was just added here!';
+let pNode = document.createElement("p");
+pNode.textContent = "I was just added here!";
 dialogNode.insertBefore(pNode, inputNode);
 ```
 
@@ -364,7 +355,7 @@ With dynamic lists, we can’t be sure the order is ever the same:
 function ShoppingList({ list }) {
   return (
     <form>
-      {list.map(item => (
+      {list.map((item) => (
         <p>
           You bought {item.name}
           <br />
@@ -372,11 +363,11 @@ function ShoppingList({ list }) {
         </p>
       ))}
     </form>
-  )
+  );
 }
 ```
 
-If the `list` of our shopping items is ever re-ordered, React will see that all `p` and `input` elements inside have the same type, and won’t know to move them. (From React’s point of view, the *items themselves* changed, not their order.)
+If the `list` of our shopping items is ever re-ordered, React will see that all `p` and `input` elements inside have the same type, and won’t know to move them. (From React’s point of view, the _items themselves_ changed, not their order.)
 
 The code executed by React to re-order 10 items would be something like:
 
@@ -384,11 +375,11 @@ The code executed by React to re-order 10 items would be something like:
 for (let i = 0; i < 10; i++) {
   let pNode = formNode.childNodes[i];
   let textNode = pNode.firstChild;
-  textNode.textContent = 'You bought ' + items[i].name;
+  textNode.textContent = "You bought " + items[i].name;
 }
 ```
 
-So instead of *re-ordering* them, React would effectively *update* each of them. This can create performance issues and possible bugs. For example, the content of the first input would stay reflected in first input *after* the sort — even though conceptually they might refer to different products in your shopping list!
+So instead of _re-ordering_ them, React would effectively _update_ each of them. This can create performance issues and possible bugs. For example, the content of the first input would stay reflected in first input _after_ the sort — even though conceptually they might refer to different products in your shopping list!
 
 **This is why React nags you to specify a special property called `key` every time you include an array of elements in your output:**
 
@@ -396,7 +387,7 @@ So instead of *re-ordering* them, React would effectively *update* each of them.
 function ShoppingList({ list }) {
   return (
     <form>
-      {list.map(item => (
+      {list.map((item) => (
         <p key={item.productId}>
           You bought {item.name}
           <br />
@@ -404,11 +395,11 @@ function ShoppingList({ list }) {
         </p>
       ))}
     </form>
-  )
+  );
 }
 ```
 
-A `key` tells React that it should consider an item to be *conceptually* the same even if it has different *positions* inside its parent element between renders.
+A `key` tells React that it should consider an item to be _conceptually_ the same even if it has different _positions_ inside its parent element between renders.
 
 When React sees `<p key="42">` inside a `<form>`, it will check if the previous render also contained `<p key="42">` inside the same `<form>`. This works even if `<form>` children changed their order. React will reuse the previous host instance with the same key if it exists, and re-order the siblings accordingly.
 
@@ -435,7 +426,7 @@ function Form({ showMessage }) {
 }
 ```
 
-They are called *components*. They let us create our own “toolbox” of buttons, avatars, comments, and so on. Components are the bread and butter of React.
+They are called _components_. They let us create our own “toolbox” of buttons, avatars, comments, and so on. Components are the bread and butter of React.
 
 Components take one argument — an object hash. It contains “props” (short for “properties”). Here, `showMessage` is a prop. They’re like named arguments.
 
@@ -452,22 +443,20 @@ function Button(props) {
 
 In general, mutation is not idiomatic in React. (We’ll talk more about the idiomatic way to update the UI in response to events later.)
 
-However, *local mutation* is absolutely fine:
+However, _local mutation_ is absolutely fine:
 
 ```jsx {2,5}
 function FriendList({ friends }) {
   let items = [];
   for (let i = 0; i < friends.length; i++) {
     let friend = friends[i];
-    items.push(
-      <Friend key={friend.id} friend={friend} />
-    );
+    items.push(<Friend key={friend.id} friend={friend} />);
   }
   return <section>{items}</section>;
 }
 ```
 
-We created `items` *while rendering* and no other component “saw” it so we can mutate it as much as we like before handing it off as part of the render result. There is no need to contort your code to avoid local mutation.
+We created `items` _while rendering_ and no other component “saw” it so we can mutate it as much as we like before handing it off as part of the render result. There is no need to contort your code to avoid local mutation.
 
 Similarly, lazy initialization is fine despite not being fully “pure”:
 
@@ -482,18 +471,18 @@ function ExpenseForm() {
 
 As long as calling a component multiple times is safe and doesn’t affect the rendering of other components, React doesn’t care if it’s 100% pure in the strict FP sense of the word. [Idempotence](https://stackoverflow.com/questions/1077412/what-is-an-idempotent-operation) is more important to React than purity.
 
-That said, side effects that are directly visible to the user are not allowed in React components. In other words, merely *calling* a component function shouldn’t by itself produce a change on the screen.
+That said, side effects that are directly visible to the user are not allowed in React components. In other words, merely _calling_ a component function shouldn’t by itself produce a change on the screen.
 
 ## Recursion
 
-How do we *use* components from other components? Components are functions so we *could* call them:
+How do we _use_ components from other components? Components are functions so we _could_ call them:
 
 ```jsx
 let reactElement = Form({ showMessage: true });
 ReactDOM.render(reactElement, domContainer);
 ```
 
-However, this is *not* the idiomatic way to use components in the React runtime.
+However, this is _not_ the idiomatic way to use components in the React runtime.
 
 Instead, the idiomatic way to use a component is with the same mechanism we’ve already seen before — React elements. **This means that you don’t directly call the component function, but instead let React later do it for you**:
 
@@ -515,8 +504,8 @@ let result = type(props); // Whatever Form returns
 Component function names are by convention capitalized. When the JSX transform sees `<Form>` rather than `<form>`, it makes the object `type` itself an identifier rather than a string:
 
 ```jsx
-console.log(<form />.type); // 'form' string
-console.log(<Form />.type); // Form function
+console.log((<form />).type); // 'form' string
+console.log((<Form />).type); // Form function
 ```
 
 There is no global registration mechanism — we literally refer to `Form` by name when typing `<Form />`. If `Form` doesn’t exist in local scope, you’ll see a JavaScript error just like you normally would with a bad variable name.
@@ -559,30 +548,29 @@ You might be wondering: why don’t we just call components directly? Why write 
 ```jsx
 // 🔴 React has no idea Layout and Article exist.
 // You're calling them.
-ReactDOM.render(
-  Layout({ children: Article() }),
-  domContainer
-)
+ReactDOM.render(Layout({ children: Article() }), domContainer);
 
 // ✅ React knows Layout and Article exist.
 // React calls them.
 ReactDOM.render(
-  <Layout><Article /></Layout>,
+  <Layout>
+    <Article />
+  </Layout>,
   domContainer
-)
+);
 ```
 
 This is a classic example of [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control). There’s a few interesting properties we get by letting React take control of calling our components:
 
-* **Components become more than functions.** React can augment component functions with features like *local state* that are tied to the component identity in the tree. A good runtime provides fundamental abstractions that match the problem at hand. As we already mentioned, React is oriented specifically at programs that render UI trees and respond to interactions. If you called components directly, you’d have to build these features yourself.
+- **Components become more than functions.** React can augment component functions with features like _local state_ that are tied to the component identity in the tree. A good runtime provides fundamental abstractions that match the problem at hand. As we already mentioned, React is oriented specifically at programs that render UI trees and respond to interactions. If you called components directly, you’d have to build these features yourself.
 
-* **Component types participate in the reconciliation.** By letting React call your components, you also tell it more about the conceptual structure of your tree. For example, when you move from rendering `<Feed>` to the `<Profile>` page, React won’t attempt to re-use host instances inside them — just like when you replace `<button>` with a `<p>`. All state will be gone — which is usually good when you render a conceptually different view. You wouldn't want to preserve input state between `<PasswordForm>` and `<MessengerChat>` even if the `<input>` position in the tree accidentally “lines up” between them.
+- **Component types participate in the reconciliation.** By letting React call your components, you also tell it more about the conceptual structure of your tree. For example, when you move from rendering `<Feed>` to the `<Profile>` page, React won’t attempt to re-use host instances inside them — just like when you replace `<button>` with a `<p>`. All state will be gone — which is usually good when you render a conceptually different view. You wouldn't want to preserve input state between `<PasswordForm>` and `<MessengerChat>` even if the `<input>` position in the tree accidentally “lines up” between them.
 
-* **React can delay the reconciliation.** If React takes control over calling our components, it can do many interesting things. For example, it can let the browser do some work between the component calls so that re-rendering a large component tree [doesn’t block the main thread](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html). Orchestrating this manually without reimplementing a large part of React is difficult.
+- **React can delay the reconciliation.** If React takes control over calling our components, it can do many interesting things. For example, it can let the browser do some work between the component calls so that re-rendering a large component tree [doesn’t block the main thread](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html). Orchestrating this manually without reimplementing a large part of React is difficult.
 
-* **A better debugging story.** If components are first-class citizens that the library is aware of, we can build [rich developer tools](https://github.com/facebook/react-devtools) for introspection in development.
+- **A better debugging story.** If components are first-class citizens that the library is aware of, we can build [rich developer tools](https://github.com/facebook/react-devtools) for introspection in development.
 
-The last benefit to React calling your component functions is *lazy evaluation*. Let’s see what this means.
+The last benefit to React calling your component functions is _lazy evaluation_. Let’s see what this means.
 
 ## Lazy Evaluation
 
@@ -623,15 +611,11 @@ The `Page` component can render the children given to it inside some `Layout`:
 
 ```jsx {4}
 function Page({ user, children }) {
-  return (
-    <Layout>
-      {children}
-    </Layout>
-  );
+  return <Layout>{children}</Layout>;
 }
 ```
 
-*(`<A><B /></A>` in JSX is the same as `<A children={<B />} />`.)*
+_(`<A><B /></A>` in JSX is the same as `<A children={<B />} />`.)_
 
 But what if it has an early exit condition?
 
@@ -640,11 +624,7 @@ function Page({ user, children }) {
   if (!user.isLoggedIn) {
     return <h1>Please log in</h1>;
   }
-  return (
-    <Layout>
-      {children}
-    </Layout>
-  );
+  return <Layout>{children}</Layout>;
 }
 ```
 
@@ -657,9 +637,7 @@ If we called `Comments()` as a function, it would execute immediately regardless
 //     children: Comments() // Always runs!
 //   }
 // }
-<Page>
-  {Comments()}
-</Page>
+<Page>{Comments()}</Page>
 ```
 
 But if we pass a React element, we don’t execute `Comments` ourselves at all:
@@ -676,7 +654,7 @@ But if we pass a React element, we don’t execute `Comments` ourselves at all:
 </Page>
 ```
 
-This lets React decide when and *whether* to call it. If our `Page` component ignores its `children` prop and renders
+This lets React decide when and _whether_ to call it. If our `Page` component ignores its `children` prop and renders
 `<h1>Please log in</h1>` instead, React won’t even attempt to call the `Comments` function. What’s the point?
 
 This is good because it both lets us avoid unnecessary rendering work that would be thrown away, and makes the code less fragile. (We don’t care if `Comments` throws or not when the user is logged out — it won’t be called.)
@@ -685,9 +663,9 @@ This is good because it both lets us avoid unnecessary rendering work that would
 
 We talked [earlier](#reconciliation) about identity and how an element’s conceptual “position” in the tree tells React whether to re-use a host instance or create a new one. Host instances can have all kinds of local state: focus, selection, input, etc. We want to preserve this state between updates that conceptually render the same UI. We also want to predictably destroy it when we render something conceptually different (such as moving from `<SignupForm>` to `<MessengerChat>`).
 
-**Local state is so useful that React lets *your own* components have it too.** Components are still functions but React augments them with features that are useful for UIs. Local state tied to the position in the tree is one of these features.
+**Local state is so useful that React lets _your own_ components have it too.** Components are still functions but React augments them with features that are useful for UIs. Local state tied to the position in the tree is one of these features.
 
-We call these features *Hooks*. For example, `useState` is a Hook.
+We call these features _Hooks_. For example, `useState` is a Hook.
 
 ```jsx {2,6,7}
 function Example() {
@@ -696,9 +674,7 @@ function Example() {
   return (
     <div>
       <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
     </div>
   );
 }
@@ -708,14 +684,13 @@ It returns a pair of values: the current state and a function that updates it.
 
 The [array destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Array_destructuring) syntax lets us give arbitrary names to our state variables. For example, I called this pair `count` and `setCount`, but it could’ve been `banana` and `setBanana`. In the text below, I will use `setState` to refer to the second value regardless of its actual name in the specific examples.
 
-*(You can learn more about `useState` and other Hooks provided by React [here](https://reactjs.org/docs/hooks-intro.html).)*
+_(You can learn more about `useState` and other Hooks provided by React [here](https://reactjs.org/docs/hooks-intro.html).)_
 
 ## Consistency
 
 Even if we want to split the reconciliation process itself into [non-blocking](https://www.youtube.com/watch?v=mDdgfyRB5kg) chunks of work, we should still perform the actual host tree operations in a single synchronous swoop. This way we can ensure that the user doesn’t see a half-updated UI, and that the browser doesn’t perform unnecessary layout and style recalculation for intermediate states that the user shouldn’t see.
 
-This is why React splits all work into the “render phase” and the “commit phase”. *Render phase* is when React calls your components and performs reconciliation. It is safe to interrupt and [in the future](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html) will be asynchronous. *Commit phase* is when React touches the host tree. It is always synchronous.
-
+This is why React splits all work into the “render phase” and the “commit phase”. _Render phase_ is when React calls your components and performs reconciliation. It is safe to interrupt and [in the future](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html) will be asynchronous. _Commit phase_ is when React touches the host tree. It is always synchronous.
 
 ## Memoization
 
@@ -743,12 +718,11 @@ Ironically, React doesn’t use a “reactivity” system for fine-grained updat
 
 This is an intentional design decision. [Time to interactive](https://calibreapp.com/blog/time-to-interactive/) is a crucial metric in consumer web applications, and traversing models to set up fine-grained listeners spends that precious time. Additionally, in many apps, interactions tend to result either in small (button hover) or large (page transition) updates, in which case fine-grained subscriptions are a waste of memory resources.
 
-One of the core design principles of React is that it works with raw data. If you have a bunch of JavaScript objects received from the network, you can pump them directly into your components with no preprocessing. There are no gotchas about which properties you can access, or unexpected performance cliffs when a structure slightly changes. React rendering is O(*view size*) rather than O(*model size*), and you can significantly cut the *view size* with [windowing](https://react-window.now.sh/#/examples/list/fixed-size).
+One of the core design principles of React is that it works with raw data. If you have a bunch of JavaScript objects received from the network, you can pump them directly into your components with no preprocessing. There are no gotchas about which properties you can access, or unexpected performance cliffs when a structure slightly changes. React rendering is O(_view size_) rather than O(_model size_), and you can significantly cut the _view size_ with [windowing](https://react-window.now.sh/#/examples/list/fixed-size).
 
 There are some kinds of applications where fine-grained subscriptions are beneficial — such as stock tickers. This is a rare example of “everything constantly updating at the same time”. While imperative escape hatches can help optimize such code, React might not be the best fit for this use case. Still, you can implement your own fine-grained subscription system on top of React.
 
-**Note that there are common performance issues that even fine-grained subscriptions and “reactivity” systems can’t solve.** For example, rendering a *new* deep tree (which happens on every page transition) without blocking the browser. Change tracking doesn’t make it faster — it makes it slower because we have to do more work to set up subscriptions. Another problem is that we have to wait for data before we can start rendering the view. In React, we aim to solve both of these problems with [Concurrent Rendering](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html).
-
+**Note that there are common performance issues that even fine-grained subscriptions and “reactivity” systems can’t solve.** For example, rendering a _new_ deep tree (which happens on every page transition) without blocking the browser. Change tracking doesn’t make it faster — it makes it slower because we have to do more work to set up subscriptions. Another problem is that we have to wait for data before we can start rendering the view. In React, we aim to solve both of these problems with [Concurrent Rendering](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html).
 
 ## Batching
 
@@ -812,33 +786,33 @@ The `setState` calls in components wouldn’t immediately cause a re-render. Ins
 Batching is good for performance but can be surprising if you write code like:
 
 ```jsx
-  const [count, setCount] = useState(0);
+const [count, setCount] = useState(0);
 
-  function increment() {
-    setCount(count + 1);
-  }
+function increment() {
+  setCount(count + 1);
+}
 
-  function handleClick() {
-    increment();
-    increment();
-    increment();
-  }
+function handleClick() {
+  increment();
+  increment();
+  increment();
+}
 ```
 
 If we start with `count` set to `0`, these would just be three `setCount(1)` calls. To fix this, `setState` provides an overload that accepts an “updater” function:
 
 ```jsx
-  const [count, setCount] = useState(0);
+const [count, setCount] = useState(0);
 
-  function increment() {
-    setCount(c => c + 1);
-  }
+function increment() {
+  setCount((c) => c + 1);
+}
 
-  function handleClick() {
-    increment();
-    increment();
-    increment();
-  }
+function handleClick() {
+  increment();
+  increment();
+  increment();
+}
 ```
 
 React would put the updater functions in a queue, and later run them in sequence, resulting in a re-render with `count` set to `3`.
@@ -846,19 +820,19 @@ React would put the updater functions in a queue, and later run them in sequence
 When state logic gets more complex than a few `setState` calls, I recommend expressing it as a local state reducer with the [`useReducer` Hook](https://reactjs.org/docs/hooks-reference.html#usereducer). It’s like an evolution of this “updater” pattern where each update is given a name:
 
 ```jsx
-  const [counter, dispatch] = useReducer((state, action) => {
-    if (action === 'increment') {
-      return state + 1;
-    } else {
-      return state;
-    }
-  }, 0);
-
-  function handleClick() {
-    dispatch('increment');
-    dispatch('increment');
-    dispatch('increment');
+const [counter, dispatch] = useReducer((state, action) => {
+  if (action === "increment") {
+    return state + 1;
+  } else {
+    return state;
   }
+}, 0);
+
+function handleClick() {
+  dispatch("increment");
+  dispatch("increment");
+  dispatch("increment");
+}
 ```
 
 The `action` argument can be anything, although an object is a common choice.
@@ -873,7 +847,7 @@ React is different from a general purpose language runtime because it’s aimed 
 
 This may be stretching the metaphor but I like to think of React components as being in a “call tree” rather than just a “call stack”. When we go “out” of the `Article` component, its React “call tree” frame doesn’t get destroyed. We need to keep the local state and references to the host instances [somewhere](https://medium.com/react-in-depth/the-how-and-why-on-reacts-usage-of-linked-list-in-fiber-67f1014d0eb7).
 
-These “call tree” frames *are* destroyed along with their local state and host instances, but only when the [reconciliation](#reconciliation) rules say it’s necessary. If you ever read React source, you might have seen these frames being referred to as [Fibers](https://en.wikipedia.org/wiki/Fiber_(computer_science)).
+These “call tree” frames _are_ destroyed along with their local state and host instances, but only when the [reconciliation](#reconciliation) rules say it’s necessary. If you ever read React source, you might have seen these frames being referred to as [Fibers](<https://en.wikipedia.org/wiki/Fiber_(computer_science)>).
 
 Fibers are where the local state actually lives. When the state is updated, React marks the Fibers below as needing reconciliation, and calls those components.
 
@@ -885,7 +859,7 @@ In React, this is solved by [Context](https://reactjs.org/docs/context.html). It
 
 ```jsx
 const ThemeContext = React.createContext(
-  'light' // Default value as a fallback
+  "light" // Default value as a fallback
 );
 
 function DarkApp() {
@@ -909,7 +883,6 @@ When `SomeDeeplyNestedChild` renders, `useContext(ThemeContext)` will look for t
 
 If there’s no `ThemeContext.Provider` above, the result of `useContext(ThemeContext)` call will be the default value specified in the `createContext()` call. In our example, it is `'light'`.
 
-
 ## Effects
 
 We mentioned earlier that React components shouldn’t have observable side effects during rendering. But side effects are sometimes necessary. We may want to manage focus, draw on a canvas, subscribe to a data source, and so on.
@@ -927,9 +900,7 @@ function Example() {
   return (
     <div>
       <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
     </div>
   );
 }
@@ -942,10 +913,10 @@ Effects don’t just run once. They run both after a component is shown to the u
 Effects may require cleanup, such as in case of subscriptions. To clean up after itself, an effect can return a function:
 
 ```jsx
-  useEffect(() => {
-    DataSource.addSubscription(handleChange);
-    return () => DataSource.removeSubscription(handleChange);
-  });
+useEffect(() => {
+  DataSource.addSubscription(handleChange);
+  return () => DataSource.removeSubscription(handleChange);
+});
 ```
 
 React will execute the returned function before applying this effect the next time, and also before the component is destroyed.
@@ -953,9 +924,9 @@ React will execute the returned function before applying this effect the next ti
 Sometimes, re-running the effect on every render can be undesirable. You can tell React to [skip](https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects) applying an effect if certain variables didn’t change:
 
 ```jsx {3}
-  useEffect(() => {
-    document.title = `You clicked ${count} times`;
-  }, [count]);
+useEffect(() => {
+  document.title = `You clicked ${count} times`;
+}, [count]);
 ```
 
 However, it is often a premature optimization and can lead to problems if you’re not familiar with how JavaScript closures work.
@@ -963,18 +934,18 @@ However, it is often a premature optimization and can lead to problems if you’
 For example, this code is buggy:
 
 ```jsx
-  useEffect(() => {
-    DataSource.addSubscription(handleChange);
-    return () => DataSource.removeSubscription(handleChange);
-  }, []);
+useEffect(() => {
+  DataSource.addSubscription(handleChange);
+  return () => DataSource.removeSubscription(handleChange);
+}, []);
 ```
 
 It is buggy because `[]` says “don’t ever re-execute this effect”. But the effect closes over `handleChange` which is defined outside of it. And `handleChange` might reference any props or state:
 
 ```jsx
-  function handleChange() {
-    console.log(count);
-  }
+function handleChange() {
+  console.log(count);
+}
 ```
 
 If we never let the effect re-run, `handleChange` will keep pointing at the version from the first render, and `count` will always be `0` inside of it.
@@ -982,15 +953,15 @@ If we never let the effect re-run, `handleChange` will keep pointing at the vers
 To solve this, make sure that if you specify the dependency array, it includes **all** things that can change, including the functions:
 
 ```jsx {4}
-  useEffect(() => {
-    DataSource.addSubscription(handleChange);
-    return () => DataSource.removeSubscription(handleChange);
-  }, [handleChange]);
+useEffect(() => {
+  DataSource.addSubscription(handleChange);
+  return () => DataSource.removeSubscription(handleChange);
+}, [handleChange]);
 ```
 
 Depending on your code, you might still see unnecessary resubscriptions because `handleChange` itself is different on every render. The [`useCallback`](https://reactjs.org/docs/hooks-reference.html#usecallback) Hook can help you with that. Alternatively, you can just let it re-subscribe. For example, browser’s `addEventListener` API is extremely fast, and jumping through hoops to avoid calling it might cause more problems than it’s worth.
 
-*(You can learn more about `useEffect` and other Hooks provided by React [here](https://reactjs.org/docs/hooks-effect.html).)*
+_(You can learn more about `useEffect` and other Hooks provided by React [here](https://reactjs.org/docs/hooks-effect.html).)_
 
 ## Custom Hooks
 
@@ -999,33 +970,31 @@ Since Hooks like `useState` and `useEffect` are function calls, we can compose t
 ```jsx {2,8}
 function MyResponsiveComponent() {
   const width = useWindowWidth(); // Our custom Hook
-  return (
-    <p>Window width is {width}</p>
-  );
+  return <p>Window width is {width}</p>;
 }
 
 function useWindowWidth() {
   const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   });
   return width;
 }
 ```
 
-Custom Hooks let different components share reusable stateful logic. Note that the *state itself* is not shared. Each call to a Hook declares its own isolated state.
+Custom Hooks let different components share reusable stateful logic. Note that the _state itself_ is not shared. Each call to a Hook declares its own isolated state.
 
-*(You can learn more about writing your own Hooks [here](https://reactjs.org/docs/hooks-custom.html).)*
+_(You can learn more about writing your own Hooks [here](https://reactjs.org/docs/hooks-custom.html).)_
 
 ## Static Use Order
 
-You can think of `useState` as a syntax for defining a “React state variable”. It’s not *really* a syntax, of course. We’re still writing JavaScript. But we are looking at React as a runtime environment, and because React tailors JavaScript to describing UI trees, its features sometimes live closer to the language space.
+You can think of `useState` as a syntax for defining a “React state variable”. It’s not _really_ a syntax, of course. We’re still writing JavaScript. But we are looking at React as a runtime environment, and because React tailors JavaScript to describing UI trees, its features sometimes live closer to the language space.
 
-If `use` *were* a syntax, it would make sense for it to be at the top level:
+If `use` _were_ a syntax, it would make sense for it to be at the top level:
 
 ```jsx {3}
 // 😉 Note: not a real syntax
@@ -1064,8 +1033,7 @@ component Example() {
   }
 ```
 
-React state is local to the *component* and its identity in the tree. If `use` were a real syntax it would make sense to scope it to the top-level of a component too:
-
+React state is local to the _component_ and its identity in the tree. If `use` were a real syntax it would make sense to scope it to the top-level of a component too:
 
 ```jsx
 // 😉 Note: not a real syntax
@@ -1083,12 +1051,11 @@ This is similar to how `import` only works at the top level of a module.
 
 **Of course, `use` is not actually a syntax.** (It wouldn’t bring much benefit and would create a lot of friction.)
 
-However, React *does* expect that all calls to Hooks happen only at the top level of a component and unconditionally. These [Rules of Hooks](https://reactjs.org/docs/hooks-rules.html) can be enforced with [a linter plugin](https://www.npmjs.com/package/eslint-plugin-react-hooks). There have been heated arguments about this design choice but in practice, I haven’t seen it confusing people. I also wrote about why commonly proposed alternatives [don’t work](https://overreacted.io/why-do-hooks-rely-on-call-order/).
+However, React _does_ expect that all calls to Hooks happen only at the top level of a component and unconditionally. These [Rules of Hooks](https://reactjs.org/docs/hooks-rules.html) can be enforced with [a linter plugin](https://www.npmjs.com/package/eslint-plugin-react-hooks). There have been heated arguments about this design choice but in practice, I haven’t seen it confusing people. I also wrote about why commonly proposed alternatives [don’t work](https://overreacted.io/why-do-hooks-rely-on-call-order/).
 
 Internally, Hooks are implemented as [linked lists](https://dev.to/aspittel/thank-u-next-an-introduction-to-linked-lists-4pph). When you call `useState`, we move the pointer to the next item. When we exit the component’s [“call tree” frame](#call-tree), we save the resulting list there until the next render.
 
 [This article](https://medium.com/@ryardley/react-hooks-not-magic-just-arrays-cd4f1857236e) provides a simplified explanation for how Hooks work internally. Arrays might be an easier mental model than linked lists:
-
 
 ```jsx
 // Pseudocode
@@ -1112,7 +1079,7 @@ YourComponent();
 fiber.hooks = hooks;
 ```
 
-*(If you’re curious, the real code is [here](https://github.com/facebook/react/blob/master/packages/react-reconciler/src/ReactFiberHooks.new.js).)*
+_(If you’re curious, the real code is [here](https://github.com/facebook/react/blob/master/packages/react-reconciler/src/ReactFiberHooks.new.js).)_
 
 This is roughly how each `useState()` call gets the right state. As we’ve learned [earlier](#reconciliation), “matching things up” isn’t new to React — reconciliation relies on the elements matching up between renders in a similar way.
 

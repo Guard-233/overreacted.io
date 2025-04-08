@@ -1,109 +1,108 @@
 ---
-title: 'Preparing for a Tech Talk, Part 2: What, Why, and How'
-date: '2019-01-07'
-spoiler: We need to go deeper.
+title: "技术讲座准备（二）：内容、原因和方法"
+date: "2019-01-07"
+spoiler: 我们需要更深入地探讨。
 ---
 
-I’ve done a [few](https://www.youtube.com/watch?v=xsSnOQynTHs) [tech](https://www.youtube.com/watch?v=nLF0n9SACd4) [talks](https://www.youtube.com/watch?v=dpw9EHDh2bM) that I think went well.
+我做过[一些](https://www.youtube.com/watch?v=xsSnOQynTHs) [技术](https://www.youtube.com/watch?v=nLF0n9SACd4) [讲座](https://www.youtube.com/watch?v=dpw9EHDh2bM)，我认为效果还不错。
 
-Sometimes people ask me how I prepare for a talk. For every speaker, the answer is very personal. I’m just sharing what works for me.
+有时人们会问我如何准备讲座。对于每一位演讲者来说，答案都非常个人化。我只是分享对我有效的方法。
 
-**This is the second post in a series** where I explain my process preparing for a tech talk — from conceiving the idea to the actual day of the presentation:
+**这是系列文章的第二篇**，我将解释我准备技术讲座的过程——从构思到实际演讲当天：
 
-* **[Preparing for a Tech Talk, Part 1: Motivation](/preparing-for-tech-talk-part-1-motivation/)**
-* **Preparing for a Tech Talk, Part 2: What, Why, and How (*this post*)**
-* **[Preparing for a Tech Talk, Part 3: Content](/preparing-for-tech-talk-part-3-content/)**
-* To be continued
+- **[技术讲座准备（一）：动机](/preparing-for-tech-talk-part-1-motivation/)**
+- **技术讲座准备（二）：内容、原因和方法 (_本文_)**
+- **[技术讲座准备（三）：内容](/preparing-for-tech-talk-part-3-content/)**
+- 待续
 
 <p />
 
 ---
 
-**In this post, I will focus on finding the What, Why, and How of my talk.** Doing this early helps me avoid a lot of headache at a later stage.
+**在这篇文章中，我将重点介绍如何找到我讲座的内容、原因和方法。** 尽早完成这项工作有助于我在后期避免很多麻烦。
 
 ---
 
-If you haven’t seen [Inception](https://en.wikipedia.org/wiki/Inception), watch it today. It’s an enjoyable blockbuster with mindbending visuals and a stimulating plot. But as [Ryan Florence](https://mobile.twitter.com/ryanflorence) taught me, it also contains good advice for creating a memorable talk.
+如果你还没看过[《盗梦空间》](https://en.wikipedia.org/wiki/Inception)，今天就去看吧。这是一部令人愉悦的大片，拥有令人费解的视觉效果和引人入胜的情节。但正如 [Ryan Florence](https://mobile.twitter.com/ryanflorence) 教我的那样，它也包含了创造令人难忘的讲座的好建议。
 
-That movie is about putting ideas into other people’s heads while they sleep. This might sound a bit invasive (and is illegal in the movie). But if you signed up to give a tech talk, that’s a pretty accurate description of your challenge.
-
----
-
-**What is the one thing that you want people to take away from your talk?** I try to formulate it as a sentence early on. This idea shouldn’t be longer than a dozen words. People will forget most of what you say so you need to pick carefully *what* you want to stick. It’s the seed you want to plant in their heads.
-
-![Spinning top from the Inception movie](./totem.jpg)
-
-For example, here’s the core ideas of my talks.
-
-* [Hot Reloading](https://www.youtube.com/watch?v=xsSnOQynTHs): “Functional principles improve the development workflow.”
-
-* [Beyond React 16](https://www.youtube.com/watch?v=nLF0n9SACd4): “Waiting for CPU and IO has a unified solution.”
-
-* [Introducing Hooks](https://www.youtube.com/watch?v=dpw9EHDh2bM): “Hooks make stateful logic reusable.”
-
-I don’t always explicitly *say* the central idea out loud or write it on a slide, but it is always the intellectual backbone of my talk. Everything I say and show must ultimately work towards supporting this idea. I want to prove it to you.
+这部电影讲述的是在人们睡觉时将想法植入他们大脑的故事。这听起来可能有点侵入性（而且在电影中是违法的）。但是，如果你报名参加技术讲座，这非常准确地描述了你面临的挑战。
 
 ---
 
-An idea is the **“What”** of my talk. But there is also **“How”** and **“Why”**:
+**你希望人们从你的讲座中记住的一件事是什么？** 我尽量在早期就将其概括为一个句子。这个想法不应该超过十几个字。人们会忘记你所说的大部分内容，所以你需要仔细选择你想要让他们记住的*内容*。这是你想植入他们大脑的种子。
 
-![Pyramid: “How” is on top of “What”. “What” is on top of “Why”.](./how-what-why.png)
+![电影《盗梦空间》中的旋转陀螺](./totem.jpg)
 
-**“How”** is my method for delivering the idea to the audience. Personally, I prefer live demos, but there are many things that can work. I will talk more about “How” in the later blog posts in this series.
+例如，以下是我的讲座的核心思想：
 
-We’ve just discussed **“What”** which is the core idea of the talk. It’s the thought I want to plant in your head and the insight I want you to walk away with. It’s what I want people to share with their friends and colleagues.
+- [热重载](https://www.youtube.com/watch?v=xsSnOQynTHs)： “函数式原则改进了开发工作流程。”
 
-Which brings us to **“Why”**. 
+- [超越 React 16](https://www.youtube.com/watch?v=nLF0n9SACd4)： “等待 CPU 和 IO 有一个统一的解决方案。”
 
----
+- [Introducing Hooks](https://www.youtube.com/watch?v=dpw9EHDh2bM)： “Hooks 使有状态逻辑可重用。”
 
-To explain **“Why”**, I’ll quote this dialog from the Inception movie:
-
-**(warning: spoilers!)**
-
->**Cobb:** "I will split up my father's empire." Now, this is obviously an idea that Robert himself will choose to reject. Which is why we need to plant it deep in his subconscious. The subconscious is motivated by emotion, right? Not reason. We need to find a way to translate this into an emotional concept.
->
->**Arthur:** How do you translate a business strategy into an emotion?
->
->**Cobb:** That's what we're here to figure out, right. Now Robert's relationship with his father is stressed, to say the least.
->
->**Eames:** Well can we run with that? We could suggest him breaking up his fathers company as a "screw you" to the old man.
->
->**Cobb:** No, cause I think positive emotion trumps negative emotion every time. We all yearn for reconciliation, for catharsis. We need Robert Fischer to have a positive emotional reaction to all this.
->
->**Eames:** Alright, well, try this? "My father accepts that I want to create for myself, not follow in his footsteps."
->
->**Cobb:** That might work.
-
-Now, I’m not suggesting that you break up empires with your talk.
-
-But there must be a [reason](/preparing-for-tech-talk-part-1-motivation/) you get out in front of thousands of people to speak about something. You *believe* in something — and you want others to share that feeling. **This is the “Why” — the emotional core of your talk.**
+我并不总是明确地大声*说出*中心思想，或者将其写在幻灯片上，但它始终是我讲座的智力支柱。我说的和展示的一切最终都必须是为了支持这个想法。我想向你证明这一点。
 
 ---
 
-Here’s the example “What”, “Why”, and “How” from my talks.
+一个想法是我讲座的**“内容”**。但还有**“方法”**和**“原因”**：
 
-<a href="https://www.youtube.com/watch?v=xsSnOQynTHs" target="_blank">![How: “Live demo”. What: “Functional principles improve the developer experience”. Why: “Create your own tools to make programming fun”.](how-what-why-hot-reloading.png)</a>
+![金字塔：“方法”位于“内容”之上。“内容”位于“原因”之上。](./how-what-why.png)
 
-*(The above pyramid is for [Hot reloading with time travel](https://www.youtube.com/watch?v=xsSnOQynTHs))*
+**“方法”**是我向观众传达想法的方式。就我个人而言，我更喜欢现场演示，但有很多方法都可行。我将在本系列后续的博客文章中更多地讨论“方法”。
 
+我们刚刚讨论了**“内容”**，这是讲座的核心思想。这是我想植入你大脑的想法，也是我希望你从中获得的见解。这是我希望人们与他们的朋友和同事分享的内容。
 
-<a href="https://www.youtube.com/watch?v=nLF0n9SACd4" target="_blank">![How: “Live demo”. What: “Waiting for CPU and IO has a unified solution”. Why: “React cares about both user and developer experience”.](how-what-why-beyond-react-16.png)</a>
-
-*(The above pyramid is for [Beyond React 16](https://www.youtube.com/watch?v=nLF0n9SACd4))*
-
-<a href="https://www.youtube.com/watch?v=dpw9EHDh2bM" target="_blank">![How: “Live demo”. What: “Hooks make stateful logic reusable. Why: “Hooks reveal the true nature of React”.](how-what-why-introducing-hooks.png)</a>
-
-*(The above pyramid is for [Introducing Hooks](https://www.youtube.com/watch?v=dpw9EHDh2bM))*
-
-A memorable talk takes a concise idea, makes the audience care about it, and has a clear and convincing execution. That’s the “What”, “Why”, and “How”.
+这就引出了**“原因”**。
 
 ---
 
-In this post, I described how I organize the core ideas of my talks. Again, I want to emphasize I’m just sharing what works for me — there are [many kinds of talks](https://mobile.twitter.com/jackiehluo/status/1077717283026411520) and your outlook on this may be very different.
+为了解释**“原因”**，我将引用电影《盗梦空间》中的这段对话：
 
-In the next posts in this series, I will talk about preparing the talk outline, slides, rehearsing the talks, and what I do on the day of the presentation.
+**(警告：剧透！)**
 
-**Next in this series: [Preparing for a Tech Talk, Part 3: Content](/preparing-for-tech-talk-part-3-content/)**.
+> **科布：** “我要瓦解我父亲的帝国。” 现在，这显然是罗伯特自己会选择拒绝的想法。这就是为什么我们需要把它深深地植入他的潜意识中。潜意识是由情感驱动的，对吧？而不是理性。我们需要找到一种方法将这个想法转化为情感概念。
+>
+> **亚瑟：** 你如何将一个商业策略转化为一种情感？
+>
+> **科布：** 这正是我们来这里要弄清楚的，对吧。现在罗伯特和他父亲的关系至少可以说很紧张。
+>
+> **伊姆斯：** 那我们能利用这一点吗？我们可以建议他解散他父亲的公司，以此来“气气”那个老家伙。
+>
+> **科布：** 不，因为我认为积极的情感总是胜过消极的情感。我们都渴望和解，渴望宣泄。我们需要罗伯特·费舍尔对这一切产生积极的情感反应。
+>
+> **伊姆斯：** 好吧，试试这个？“我父亲接受我想为自己创造，而不是遵循他的脚步。”
+>
+> **科布：** 这或许可行。
 
-**Previous in this series: [Preparing for a Tech Talk, Part 1: Motivation](/preparing-for-tech-talk-part-1-motivation/)**.
+现在，我并不是建议你用你的演讲来瓦解帝国。
+
+但是，你肯定有[理由](/preparing-for-tech-talk-part-1-motivation/)站在成千上万的人面前谈论某件事。你*相信*某件事——并且你想让其他人也分享这种感觉。**这就是“原因”——你讲座的情感核心。**
+
+---
+
+以下是我讲座中“内容”、“原因”和“方法”的示例。
+
+<a href="https://www.youtube.com/watch?v=xsSnOQynTHs" target="_blank">![方法：“现场演示”。内容：“函数式原则改进了开发者体验”。原因：“创建你自己的工具，让编程充满乐趣”。](how-what-why-hot-reloading.png)</a>
+
+_(上面的金字塔适用于 [具有时间旅行的热重载](https://www.youtube.com/watch?v=xsSnOQynTHs))_
+
+<a href="https://www.youtube.com/watch?v=nLF0n9SACd4" target="_blank">![方法：“现场演示”。内容：“等待 CPU 和 IO 有一个统一的解决方案”。原因：“React 关心用户和开发者体验”。](how-what-why-beyond-react-16.png)</a>
+
+_(上面的金字塔适用于 [超越 React 16](https://www.youtube.com/watch?v=nLF0n9SACd4))_
+
+<a href="https://www.youtube.com/watch?v=dpw9EHDh2bM" target="_blank">![方法：“现场演示”。内容：“Hooks 使有状态逻辑可重用。原因：“Hooks 揭示了 React 的真正本质”。](how-what-why-introducing-hooks.png)</a>
+
+_(上面的金字塔适用于 [Introducing Hooks](https://www.youtube.com/watch?v=dpw9EHDh2bM))_
+
+一个令人难忘的讲座需要一个简洁的想法，让观众关心它，并有清晰且令人信服的执行。这就是“内容”、“原因”和“方法”。
+
+---
+
+在这篇文章中，我描述了我是如何组织我的讲座的核心思想的。再次强调，我只是分享对我有效的方法——[有很多种讲座](https://mobile.twitter.com/jackiehluo/status/1077717283026411520)，你对此的看法可能大相径庭。
+
+在本系列接下来的文章中，我将讨论准备讲座大纲、幻灯片、排练讲座以及我在演讲当天所做的事情。
+
+**本系列下一篇：[技术讲座准备（三）：内容](/preparing-for-tech-talk-part-3-content/)**。
+
+**本系列上一篇：[技术讲座准备（一）：动机](/preparing-for-tech-talk-part-1-motivation/)**。

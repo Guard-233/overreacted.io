@@ -1,6 +1,6 @@
 ---
 title: Writing Resilient Components
-date: '2019-03-16'
+date: "2019-03-16"
 spoiler: Four principles to set you on the right path.
 ---
 
@@ -20,31 +20,31 @@ Before we talk about component design principles, I want to say a few words abou
 
 In the JavaScript community, there are a few strict opinionated style guides enforced by a linter. My personal observation is that they tend to create more friction than they’re worth. I can’t count how many times somebody showed me some absolutely valid code and said “React complains about this”, but it was their lint config complaining! This leads to three issues:
 
-* People get used to seeing the linter as an **overzealous noisy gatekeeper** rather than a helpful tool. Useful warnings are drowned out by a sea of style nits. As a result, people don’t scan the linter messages while debugging, and miss helpful tips. Additionally, people who are less used to writing JavaScript (for example, designers) have a harder time working with the code.
+- People get used to seeing the linter as an **overzealous noisy gatekeeper** rather than a helpful tool. Useful warnings are drowned out by a sea of style nits. As a result, people don’t scan the linter messages while debugging, and miss helpful tips. Additionally, people who are less used to writing JavaScript (for example, designers) have a harder time working with the code.
 
-* People don’t learn to **differentiate between valid and invalid uses** of a certain pattern. For example, there is a popular rule that forbids calling `setState` inside `componentDidMount`. But if it was always “bad”, React simply wouldn’t allow it! There is a legitimate use case for it, and that is to measure the DOM node layout — e.g. to position a tooltip. I’ve seen people “work around” this rule by adding a `setTimeout` which completely misses the point.
+- People don’t learn to **differentiate between valid and invalid uses** of a certain pattern. For example, there is a popular rule that forbids calling `setState` inside `componentDidMount`. But if it was always “bad”, React simply wouldn’t allow it! There is a legitimate use case for it, and that is to measure the DOM node layout — e.g. to position a tooltip. I’ve seen people “work around” this rule by adding a `setTimeout` which completely misses the point.
 
-* Eventually, people adopt the “enforcer mindset” and get opinionated about things that **don’t bring a meaningful difference** but are easy to scan for in the code. “You used a function declaration, but *our* project uses arrow functions.” Whenever I have a strong feeling about enforcing a rule like this, looking deeper reveals that I invested emotional effort into this rule — and struggle to let it go. It lulls me into a false sense of accomplishment without improving my code.
+- Eventually, people adopt the “enforcer mindset” and get opinionated about things that **don’t bring a meaningful difference** but are easy to scan for in the code. “You used a function declaration, but _our_ project uses arrow functions.” Whenever I have a strong feeling about enforcing a rule like this, looking deeper reveals that I invested emotional effort into this rule — and struggle to let it go. It lulls me into a false sense of accomplishment without improving my code.
 
 Am I saying that we should stop linting? Not at all!
 
-**With a good config, a linter is a great tool to catch bugs before they happen.** It’s focusing on the *style* too much that turns it into a distraction.
+**With a good config, a linter is a great tool to catch bugs before they happen.** It’s focusing on the _style_ too much that turns it into a distraction.
 
 ---
 
 ## Marie Kondo Your Lint Config
 
-Here’s what I suggest you to do on Monday. Gather your team for half an hour, go through every lint rule enabled in your project’s config, and ask yourself: *“Has this rule ever helped us catch a bug?”* If not, *turn it off.* (You can also start from a clean slate with [`eslint-config-react-app`](https://www.npmjs.com/package/eslint-config-react-app) which has no styling rules.)
+Here’s what I suggest you to do on Monday. Gather your team for half an hour, go through every lint rule enabled in your project’s config, and ask yourself: _“Has this rule ever helped us catch a bug?”_ If not, _turn it off._ (You can also start from a clean slate with [`eslint-config-react-app`](https://www.npmjs.com/package/eslint-config-react-app) which has no styling rules.)
 
 At the very least, your team should have a process for removing rules that cause friction. Don’t assume that whatever you or something somebody else added to your lint config a year ago is a “best practice”. Question it and look for answers. Don’t let anyone tell you you’re not smart enough to pick your lint rules.
 
-**But what about formatting?** Use [Prettier](https://prettier.io/) and forget about the “style nits”. You don’t need a tool to shout at you for putting an extra space if another tool can fix it for you. Use the linter to find *bugs*, not enforcing the *a e s t h e t i c s*.
+**But what about formatting?** Use [Prettier](https://prettier.io/) and forget about the “style nits”. You don’t need a tool to shout at you for putting an extra space if another tool can fix it for you. Use the linter to find _bugs_, not enforcing the _a e s t h e t i c s_.
 
 Of course, there are aspects of the coding style that aren’t directly related to formatting but can still be annoying when inconsistent across the project.
 
 However, many of them are too subtle to catch with a lint rule anyway. This is why it’s important to **build trust** between the team members, and to share useful learnings in the form of a wiki page or a short design guide.
 
-Not everything is worth automating! The insights gained from *actually reading* the rationale in such a guide can be more valuable than following the “rules”.
+Not everything is worth automating! The insights gained from _actually reading_ the rationale in such a guide can be more valuable than following the “rules”.
 
 **But if following a strict style guide is a distraction, what’s actually important?**
 
@@ -54,7 +54,7 @@ That’s the topic of this post.
 
 ## Writing Resilient Components
 
-No amount of indentation or sorting imports alphabetically can fix a broken design. So instead of focusing on how some code *looks*, I will focus on how it *works*. There’s a few component design principles that I find very helpful:
+No amount of indentation or sorting imports alphabetically can fix a broken design. So instead of focusing on how some code _looks_, I will focus on how it _works_. There’s a few component design principles that I find very helpful:
 
 1. **[Don’t stop the data flow](#principle-1-dont-stop-the-data-flow)**
 2. **[Always be ready to render](#principle-2-always-be-ready-to-render)**
@@ -73,7 +73,7 @@ When somebody uses your component, they expect that they can pass different prop
 
 ```jsx
 // isOk might be driven by state and can change at any time
-<Button color={isOk ? 'blue' : 'red'} />
+<Button color={isOk ? "blue" : "red"} />
 ```
 
 In general, this is how React works by default. If you use a `color` prop inside a `Button` component, you’ll see the value provided from above for that render:
@@ -82,9 +82,7 @@ In general, this is how React works by default. If you use a `color` prop inside
 function Button({ color, children }) {
   return (
     // ✅ `color` is always fresh!
-    <button className={'Button-' + color}>
-      {children}
-    </button>
+    <button className={"Button-" + color}>{children}</button>
   );
 }
 ```
@@ -94,15 +92,11 @@ However, a common mistake when learning React is to copy props into state:
 ```jsx {3,6}
 class Button extends React.Component {
   state = {
-    color: this.props.color
+    color: this.props.color,
   };
   render() {
     const { color } = this.state; // 🔴 `color` is stale!
-    return (
-      <button className={'Button-' + color}>
-        {this.props.children}
-      </button>
-    );
+    return <button className={"Button-" + color}>{this.props.children}</button>;
   }
 }
 ```
@@ -111,10 +105,10 @@ This might seem more intuitive at first if you used classes outside of React. **
 
 ```jsx
 // 🔴 No longer works for updates with the above implementation
-<Button color={isOk ? 'blue' : 'red'} />
+<Button color={isOk ? "blue" : "red"} />
 ```
 
-In the rare case that this behavior *is* intentional, make sure to call that prop `initialColor` or `defaultColor` to clarify that changes to it are ignored.
+In the rare case that this behavior _is_ intentional, make sure to call that prop `initialColor` or `defaultColor` to clarify that changes to it are ignored.
 
 But usually you’ll want to **read the props directly in your component** and avoid copying props (or anything computed from the props) into state:
 
@@ -122,28 +116,27 @@ But usually you’ll want to **read the props directly in your component** and a
 function Button({ color, children }) {
   return (
     // ✅ `color` is always fresh!
-    <button className={'Button-' + color}>
-      {children}
-    </button>
+    <button className={"Button-" + color}>{children}</button>
   );
 }
 ```
 
-----
+---
 
-Computed values are another reason people sometimes attempt to copy props into state. For example, imagine that we determined the *button text* color based on an expensive computation with background `color` as an argument: 
+Computed values are another reason people sometimes attempt to copy props into state. For example, imagine that we determined the _button text_ color based on an expensive computation with background `color` as an argument:
 
 ```jsx {3,9}
 class Button extends React.Component {
   state = {
-    textColor: slowlyCalculateTextColor(this.props.color)
+    textColor: slowlyCalculateTextColor(this.props.color),
   };
   render() {
     return (
-      <button className={
-        'Button-' + this.props.color +
-        ' Button-text-' + this.state.textColor // 🔴 Stale on `color` prop updates
-      }>
+      <button
+        className={
+          "Button-" + this.props.color + " Button-text-" + this.state.textColor // 🔴 Stale on `color` prop updates
+        }
+      >
         {this.props.children}
       </button>
     );
@@ -158,10 +151,11 @@ class Button extends React.PureComponent {
   render() {
     const textColor = slowlyCalculateTextColor(this.props.color);
     return (
-      <button className={
-        'Button-' + this.props.color +
-        ' Button-text-' + textColor // ✅ Always fresh
-      }>
+      <button
+        className={
+          "Button-" + this.props.color + " Button-text-" + textColor // ✅ Always fresh
+        }
+      >
         {this.props.children}
       </button>
     );
@@ -176,7 +170,7 @@ However, we might want to optimize it further. What if it’s the `children` pro
 ```jsx {5-12}
 class Button extends React.Component {
   state = {
-    textColor: slowlyCalculateTextColor(this.props.color)
+    textColor: slowlyCalculateTextColor(this.props.color),
   };
   componentDidUpdate(prevProps) {
     if (prevProps.color !== this.props.color) {
@@ -188,10 +182,11 @@ class Button extends React.Component {
   }
   render() {
     return (
-      <button className={
-        'Button-' + this.props.color +
-        ' Button-text-' + this.state.textColor // ✅ Fresh on final render
-      }>
+      <button
+        className={
+          "Button-" + this.props.color + " Button-text-" + this.state.textColor // ✅ Fresh on final render
+        }
+      >
         {this.props.children}
       </button>
     );
@@ -203,7 +198,7 @@ However, this would mean our component does a second re-render after every chang
 
 You could use the legacy `componentWillReceiveProps` lifecycle for this. However, people often put side effects there too. That, in turn, often causes problems for the upcoming Concurrent Rendering [features like Time Slicing and Suspense](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html). And the “safer” `getDerivedStateFromProps` method is clunky.
 
-Let’s step back for a second. Effectively, we want [*memoization*](https://en.wikipedia.org/wiki/Memoization). We have some inputs, and we don’t want to recalculate the output unless the inputs change.
+Let’s step back for a second. Effectively, we want [_memoization_](https://en.wikipedia.org/wiki/Memoization). We have some inputs, and we don’t want to recalculate the output unless the inputs change.
 
 With a class, you could use a [helper](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#what-about-memoization) for memoization. However, Hooks take this a step further, giving you a built-in way to memoize expensive computations:
 
@@ -214,7 +209,7 @@ function Button({ color, children }) {
     [color] // ✅ Don’t recalculate until `color` changes
   );
   return (
-    <button className={'Button-' + color + ' Button-text-' + textColor}>
+    <button className={"Button-" + color + " Button-text-" + textColor}>
       {children}
     </button>
   );
@@ -238,7 +233,7 @@ Consider this React component:
 ```jsx {5-7}
 class SearchResults extends React.Component {
   state = {
-    data: null
+    data: null,
   };
   componentDidMount() {
     this.fetchResults();
@@ -248,7 +243,7 @@ class SearchResults extends React.Component {
     // Do the fetching...
   }
   getFetchUrl() {
-    return 'http://myapi/results?query' + this.props.query;
+    return "http://myapi/results?query" + this.props.query;
   }
   render() {
     // ...
@@ -268,23 +263,24 @@ But what if the `query` prop changes? In our component, nothing will happen. **T
 
 In order to fix our component, we need to:
 
-* Look at `componentDidMount` and every method called from it.
+- Look at `componentDidMount` and every method called from it.
   - In our example, that’s `fetchResults` and `getFetchUrl`.
-* Write down all props and state used by those methods.
+- Write down all props and state used by those methods.
   - In our example, that’s `this.props.query`.
-* Make sure that whenever those props change, we re-run the side effect.
+- Make sure that whenever those props change, we re-run the side effect.
   - We can do this by adding the `componentDidUpdate` method.
 
 ```jsx {8-12,18}
 class SearchResults extends React.Component {
   state = {
-    data: null
+    data: null,
   };
   componentDidMount() {
     this.fetchResults();
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.query !== this.props.query) { // ✅ Refetch on change
+    if (prevProps.query !== this.props.query) {
+      // ✅ Refetch on change
       this.fetchResults();
     }
   }
@@ -293,7 +289,7 @@ class SearchResults extends React.Component {
     // Do the fetching...
   }
   getFetchUrl() {
-    return 'http://myapi/results?query' + this.props.query; // ✅ Updates are handled
+    return "http://myapi/results?query" + this.props.query; // ✅ Updates are handled
   }
   render() {
     // ...
@@ -325,8 +321,10 @@ class SearchResults extends React.Component {
   }
   getFetchUrl() {
     return (
-      'http://myapi/results?query' + this.props.query +
-      '&page=' + this.state.currentPage // 🔴 Updates are ignored
+      "http://myapi/results?query" +
+      this.props.query +
+      "&page=" +
+      this.state.currentPage // 🔴 Updates are ignored
     );
   }
   render() {
@@ -341,11 +339,11 @@ Alas, our code is again buggy because our side effect doesn’t respect changes 
 
 To fix our code, we can repeat the steps above:
 
-* Look at `componentDidMount` and every method called from it.
+- Look at `componentDidMount` and every method called from it.
   - In our example, that’s `fetchResults` and `getFetchUrl`.
-* Write down all props and state used by those methods.
+- Write down all props and state used by those methods.
   - In our example, that’s `this.props.query` **and `this.state.currentPage`**.
-* Make sure that whenever those props change, we re-run the side effect.
+- Make sure that whenever those props change, we re-run the side effect.
   - We can do this by changing the `componentDidUpdate` method.
 
 Let’s fix our component to handle updates to the `currentPage` state:
@@ -373,8 +371,10 @@ class SearchResults extends React.Component {
   }
   getFetchUrl() {
     return (
-      'http://myapi/results?query' + this.props.query +
-      '&page=' + this.state.currentPage // ✅ Updates are handled
+      "http://myapi/results?query" +
+      this.props.query +
+      "&page=" +
+      this.state.currentPage // ✅ Updates are handled
     );
   }
   render() {
@@ -389,7 +389,7 @@ class SearchResults extends React.Component {
 
 Unfortunately, automatically checking a class component for consistency is too difficult. Any method can call any other method. Statically analyzing calls from `componentDidMount` and `componentDidUpdate` is fraught with false positives.
 
-However, one *could* design an API that *can* be statically analyzed for consistency. The [React `useEffect` Hook](/a-complete-guide-to-useeffect/) is an example of such API:
+However, one _could_ design an API that _can_ be statically analyzed for consistency. The [React `useEffect` Hook](/a-complete-guide-to-useeffect/) is an example of such API:
 
 ```jsx {13-14,19}
 function SearchResults({ query }) {
@@ -403,10 +403,7 @@ function SearchResults({ query }) {
     }
 
     function getFetchUrl() {
-      return (
-        'http://myapi/results?query' + query +
-        '&page=' + currentPage
-      );
+      return "http://myapi/results?query" + query + "&page=" + currentPage;
     }
 
     fetchResults();
@@ -416,7 +413,7 @@ function SearchResults({ query }) {
 }
 ```
 
-We put the logic *inside* of the effect, and that makes it easier to see *which values from the React data flow* it depends on. These values are called “dependencies”, and in our example they are `[currentPage, query]`.
+We put the logic _inside_ of the effect, and that makes it easier to see _which values from the React data flow_ it depends on. These values are called “dependencies”, and in our example they are `[currentPage, query]`.
 
 Note how this array of “effect dependencies” isn’t really a new concept. In a class, we had to search for these “dependencies” through all the method calls. The `useEffect` API just makes the same concept explicit.
 
@@ -424,13 +421,13 @@ This, in turn, lets us validate them automatically:
 
 ![Demo of exhaustive-deps lint rule](./useeffect.gif)
 
-*(This is a demo of the new recommended `exhaustive-deps` lint rule which is a part of `eslint-plugin-react-hooks`. It will soon be included in Create React App.)*
+_(This is a demo of the new recommended `exhaustive-deps` lint rule which is a part of `eslint-plugin-react-hooks`. It will soon be included in Create React App.)_
 
-**Note that it is important to respect all prop and state updates for effects regardless of whether you’re writing component as a  class or a function.**
+**Note that it is important to respect all prop and state updates for effects regardless of whether you’re writing component as a class or a function.**
 
 With the class API, you have to think about consistency yourself, and verify that changes to every relevant prop or state are handled by `componentDidUpdate`. Otherwise, your component is not resilient to prop and state changes. This is not even a React-specific problem. It applies to any UI library that lets you handle “creation” and “updates” separately.
 
-**The `useEffect` API flips the default by encouraging consistency.** This [might feel unfamiliar at first](/a-complete-guide-to-useeffect/), but as a result your component becomes more resilient to changes in the logic. And since the “dependencies” are now explicit, we can *verify* the effect is consistent using a lint rule. We’re using a linter to catch bugs!
+**The `useEffect` API flips the default by encouraging consistency.** This [might feel unfamiliar at first](/a-complete-guide-to-useeffect/), but as a result your component becomes more resilient to changes in the logic. And since the “dependencies” are now explicit, we can _verify_ the effect is consistent using a lint rule. We’re using a linter to catch bugs!
 
 ---
 
@@ -445,7 +442,7 @@ Note that optimization approaches that use shallow equality like `PureComponent`
 ```jsx {2-5,7}
 class Button extends React.Component {
   shouldComponentUpdate(prevProps) {
-    // 🔴 Doesn't compare this.props.onClick 
+    // 🔴 Doesn't compare this.props.onClick
     return this.props.color !== prevProps.color;
   }
   render() {
@@ -454,7 +451,8 @@ class Button extends React.Component {
     return (
       <button
         onClick={onClick}
-        className={'Button-' + this.props.color + ' Button-text-' + textColor}>
+        className={"Button-" + this.props.color + " Button-text-" + textColor}
+      >
         {this.props.children}
       </button>
     );
@@ -462,49 +460,53 @@ class Button extends React.Component {
 }
 ```
 
-It is easy to miss this mistake at first because with classes, you’d usually pass a *method* down, and so it would have the same identity anyway:
+It is easy to miss this mistake at first because with classes, you’d usually pass a _method_ down, and so it would have the same identity anyway:
 
 ```jsx {2-4,9-11}
 class MyForm extends React.Component {
-  handleClick = () => { // ✅ Always the same function
+  handleClick = () => {
+    // ✅ Always the same function
     // Do something
-  }
+  };
   render() {
     return (
       <>
         <h1>Hello!</h1>
-        <Button color='green' onClick={this.handleClick}>
+        <Button color="green" onClick={this.handleClick}>
           Press me
         </Button>
       </>
-    )
+    );
   }
 }
 ```
 
-So our optimization doesn’t break *immediately*. However, it will keep “seeing” the old `onClick` value if it changes over time but other props don’t:
+So our optimization doesn’t break _immediately_. However, it will keep “seeing” the old `onClick` value if it changes over time but other props don’t:
 
 ```jsx {6,13-15}
 class MyForm extends React.Component {
   state = {
-    isEnabled: true
+    isEnabled: true,
   };
   handleClick = () => {
     this.setState({ isEnabled: false });
     // Do something
-  }
+  };
   render() {
     return (
       <>
         <h1>Hello!</h1>
-        <Button color='green' onClick={
-          // 🔴 Button ignores updates to the onClick prop
-          this.state.isEnabled ? this.handleClick : null
-        }>
+        <Button
+          color="green"
+          onClick={
+            // 🔴 Button ignores updates to the onClick prop
+            this.state.isEnabled ? this.handleClick : null
+          }
+        >
           Press me
         </Button>
       </>
-    )
+    );
   }
 }
 ```
@@ -514,17 +516,18 @@ In this example, clicking the button should disable it — but this doesn’t ha
 This could get even more confusing if the function identity itself depends on something that could change over time, like `draft.content` in this example:
 
 ```jsx {6-7}
-  drafts.map(draft =>
-    <Button
-      color='blue'
-      key={draft.id}
-      onClick={
-        // 🔴 Button ignores updates to the onClick prop
-        this.handlePublish.bind(this, draft.content)
-      }>
-      Publish
-    </Button>
-  )
+drafts.map((draft) => (
+  <Button
+    color="blue"
+    key={draft.id}
+    onClick={
+      // 🔴 Button ignores updates to the onClick prop
+      this.handlePublish.bind(this, draft.content)
+    }
+  >
+    Publish
+  </Button>
+));
 ```
 
 While `draft.content` could change over time, our `Button` component ignored change to the `onClick` prop so it continues to see the “first version” of the `onClick` bound method with the original `draft.content`.
@@ -539,7 +542,8 @@ function Button({ onClick, color, children }) {
   return (
     <button
       onClick={onClick}
-      className={'Button-' + color + ' Button-text-' + textColor}>
+      className={"Button-" + color + " Button-text-" + textColor}
+    >
       {children}
     </button>
   );
@@ -555,7 +559,7 @@ If you insist on a custom comparison, **make sure that you don’t skip function
 
 ```jsx {5}
   shouldComponentUpdate(prevProps) {
-    // ✅ Compares this.props.onClick 
+    // ✅ Compares this.props.onClick
     return (
       this.props.color !== prevProps.color ||
       this.props.onClick !== prevProps.onClick
@@ -565,7 +569,7 @@ If you insist on a custom comparison, **make sure that you don’t skip function
 
 As I mentioned earlier, it’s easy to miss this problem in a class component because method identities are often stable (but not always — and that’s where the bugs become difficult to debug). With Hooks, the situation is a bit different:
 
-1. Functions are different *on every render* so you discover this problem [right away](https://github.com/facebook/react/issues/14972#issuecomment-468280039).
+1. Functions are different _on every render_ so you discover this problem [right away](https://github.com/facebook/react/issues/14972#issuecomment-468280039).
 2. With `useCallback` and `useContext`, you can [avoid passing functions deep down altogether](https://reactjs.org/docs/hooks-faq.html#how-to-avoid-passing-callbacks-down). This lets you optimize rendering without worrying about functions.
 
 ---
@@ -580,7 +584,7 @@ With classes, it’s easy to forget about updates when using props and state ins
 
 ## Principle 2: Always Be Ready to Render
 
-React components let you write rendering code without worrying too much about time. You describe how the UI *should* look at any given moment, and React makes it happen. Take advantage of that model!
+React components let you write rendering code without worrying too much about time. You describe how the UI _should_ look at any given moment, and React makes it happen. Take advantage of that model!
 
 Don’t try to introduce unnecessary timing assumptions into your component behavior. **Your component should be ready to re-render at any time.**
 
@@ -589,7 +593,7 @@ How can one violate this principle? React doesn’t make it very easy — but yo
 ```jsx {5-8}
 class TextInput extends React.Component {
   state = {
-    value: ''
+    value: "",
   };
   // 🔴 Resets local state on every parent render
   componentWillReceiveProps(nextProps) {
@@ -599,17 +603,12 @@ class TextInput extends React.Component {
     this.setState({ value: e.target.value });
   };
   render() {
-    return (
-      <input
-        value={this.state.value}
-        onChange={this.handleChange}
-      />
-    );
+    return <input value={this.state.value} onChange={this.handleChange} />;
   }
 }
 ```
 
-In this example, we keep `value` in the local state, but we *also* receive `value` from props. Whenever we “receive new props”, we reset the `value` in state.
+In this example, we keep `value` in the local state, but we _also_ receive `value` from props. Whenever we “receive new props”, we reset the `value` in state.
 
 **The problem with this pattern is that it entirely relies on accidental timing.**
 
@@ -621,19 +620,14 @@ But tomorrow you might add some animation to the parent of `TextInput`. If its p
 
 First of all, we need to fix our mental model. We need to stop thinking of “receiving props” as something different from just “rendering”. A re-render caused by a parent shouldn’t behave differently from a re-render caused by our own local state change. **Components should be resilient to rendering less or more often because otherwise they’re too coupled to their particular parents.**
 
-*([This demo](https://codesandbox.io/s/m3w9zn1z8x) shows how re-rendering can break fragile components.)*
+_([This demo](https://codesandbox.io/s/m3w9zn1z8x) shows how re-rendering can break fragile components.)_
 
-While there are a few [different](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions) [solutions](https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops) for when you *truly* want to derive state from props, usually you should use either a fully controlled component:
+While there are a few [different](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions) [solutions](https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops) for when you _truly_ want to derive state from props, usually you should use either a fully controlled component:
 
 ```jsx
 // Option 1: Fully controlled component.
 function TextInput({ value, onChange }) {
-  return (
-    <input
-      value={value}
-      onChange={onChange}
-    />
-  );
+  return <input value={value} onChange={onChange} />;
 }
 ```
 
@@ -642,17 +636,12 @@ Or you can use an uncontrolled component with a key to reset it:
 ```jsx
 // Option 2: Fully uncontrolled component.
 function TextInput() {
-  const [value, setValue] = useState('');
-  return (
-    <input
-      value={value}
-      onChange={e => setValue(e.target.value)}
-    />
-  );
+  const [value, setValue] = useState("");
+  return <input value={value} onChange={(e) => setValue(e.target.value)} />;
 }
 
 // We can reset its internal state later by changing the key:
-<TextInput key={formId} />
+<TextInput key={formId} />;
 ```
 
 The takeaway from this section is that your component shouldn’t break just because it or its parent re-renders more often. The React API design makes it easy if you avoid the legacy `componentWillReceiveProps` lifecycle method.
@@ -678,7 +667,7 @@ This code should work, right?
 // 🤔 Should prevent unnecessary re-renders... right?
 class TextInput extends React.PureComponent {
   state = {
-    value: ''
+    value: "",
   };
   // 🔴 Resets local state on every parent render
   componentWillReceiveProps(nextProps) {
@@ -688,23 +677,18 @@ class TextInput extends React.PureComponent {
     this.setState({ value: e.target.value });
   };
   render() {
-    return (
-      <input
-        value={this.state.value}
-        onChange={this.handleChange}
-      />
-    );
+    return <input value={this.state.value} onChange={this.handleChange} />;
   }
 }
 ```
 
 At first, it might seem like this component solves the problem of “blowing away” the state on parent re-render. After all, if the props are the same, we just skip the update — and so `componentWillReceiveProps` doesn’t get called.
 
-However, this gives us a false sense of security. **This component is still not resilient to _actual_ prop changes.** For example, if we added *another* often-changing prop, like an animated `style`, we would still “lose” the internal state:
+However, this gives us a false sense of security. **This component is still not resilient to _actual_ prop changes.** For example, if we added _another_ often-changing prop, like an animated `style`, we would still “lose” the internal state:
 
 ```jsx {2}
 <TextInput
-  style={{opacity: someValueFromState}}
+  style={{ opacity: someValueFromState }}
   value={
     // 🔴 componentWillReceiveProps in TextInput
     // resets to this value on every animation tick.
@@ -713,7 +697,7 @@ However, this gives us a false sense of security. **This component is still not 
 />
 ```
 
-So this approach is still flawed. We can see that various optimizations like `PureComponent`, `shouldComponentUpdate`, and `React.memo` shouldn’t be used for controlling *behavior*. Only use them to improve *performance* where it helps. If removing an optimization _breaks_ a component, it was too fragile to begin with.
+So this approach is still flawed. We can see that various optimizations like `PureComponent`, `shouldComponentUpdate`, and `React.memo` shouldn’t be used for controlling _behavior_. Only use them to improve _performance_ where it helps. If removing an optimization _breaks_ a component, it was too fragile to begin with.
 
 The solution here is the same as we described earlier. Don’t treat “receiving props” as a special event. Avoid “syncing” props and state. In most cases, every value should either be fully controlled (through props), or fully uncontrolled (in local state). Avoid derived state [when you can](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions). **And always be ready to render!**
 
@@ -721,9 +705,9 @@ The solution here is the same as we described earlier. Don’t treat “receivin
 
 ## Principle 3: No Component Is a Singleton
 
-Sometimes we assume a certain component is only ever displayed once. Such as a navigation bar. This might be true for some time. However, this assumption often causes design problems that only surface much later. 
+Sometimes we assume a certain component is only ever displayed once. Such as a navigation bar. This might be true for some time. However, this assumption often causes design problems that only surface much later.
 
-For example, maybe you need to implement an animation *between* two `Page` components on a route change — the previous `Page` and the next `Page`. Both of them need to be mounted during the animation. However, you might discover that each of those components assumes it’s the only `Page` on the screen.
+For example, maybe you need to implement an animation _between_ two `Page` components on a route change — the previous `Page` and the next `Page`. Both of them need to be mounted during the animation. However, you might discover that each of those components assumes it’s the only `Page` on the screen.
 
 It’s easy to check for these problems. Just for fun, try to render your app twice:
 
@@ -733,7 +717,7 @@ ReactDOM.render(
     <MyApp />
     <MyApp />
   </>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 ```
 
@@ -750,7 +734,7 @@ componentWillUnmount() {
 }
 ```
 
-Of course, if there are two such components on the page, unmounting one of them can break the other one. Resetting “global” state on *mount* is no better:
+Of course, if there are two such components on the page, unmounting one of them can break the other one. Resetting “global” state on _mount_ is no better:
 
 ```jsx {2-3}
 componentDidMount() {
@@ -759,9 +743,9 @@ componentDidMount() {
 }
 ```
 
-In that case *mounting* a second form will break the first one.
+In that case _mounting_ a second form will break the first one.
 
-These patterns are good indicators of where our components are fragile. ***Showing* or *hiding* a tree shouldn’t break components outside of that tree.**
+These patterns are good indicators of where our components are fragile. **_Showing_ or _hiding_ a tree shouldn’t break components outside of that tree.**
 
 Whether you plan to render this component twice or not, solving these issues pays off in the longer term. It leads you to a more resilient design.
 
@@ -779,17 +763,17 @@ If you’re used to putting everything into a “state manager”, answering thi
 
 For example, imagine we rendered the same `Post` twice. Let’s look at different things inside of it that can change.
 
-* *Post content.* We’d want editing the post in one tree to update it in another tree. Therefore, it probably **should not** be the local state of a `Post` component. (Instead, the post content could live in some cache like Apollo, Relay, or Redux.)
+- _Post content._ We’d want editing the post in one tree to update it in another tree. Therefore, it probably **should not** be the local state of a `Post` component. (Instead, the post content could live in some cache like Apollo, Relay, or Redux.)
 
-* *List of comments.* This is similar to post content. We’d want adding a new comment in one tree to be reflected in the other tree too. So ideally we would use some kind of a cache for it, and it **should not** be a local state of our `Post`.
+- _List of comments._ This is similar to post content. We’d want adding a new comment in one tree to be reflected in the other tree too. So ideally we would use some kind of a cache for it, and it **should not** be a local state of our `Post`.
 
-* *Which comments are expanded.* It would be weird if expanding a comment in one tree would also expand it in another tree. In this case we’re interacting with a particular `Comment` *UI representation* rather than an abstract “comment entity”. Therefore, an “expanded” flag **should** be a local state of the `Comment`.
+- _Which comments are expanded._ It would be weird if expanding a comment in one tree would also expand it in another tree. In this case we’re interacting with a particular `Comment` _UI representation_ rather than an abstract “comment entity”. Therefore, an “expanded” flag **should** be a local state of the `Comment`.
 
-* *The value of new comment input.* It would be odd if typing a comment in one input would also update an input in another tree. Unless inputs are clearly grouped together, usually people expect them to be independent. So the input value **should** be a local state of the `NewComment` component.
+- _The value of new comment input._ It would be odd if typing a comment in one input would also update an input in another tree. Unless inputs are clearly grouped together, usually people expect them to be independent. So the input value **should** be a local state of the `NewComment` component.
 
 I don’t suggest a dogmatic interpretation of these rules. Of course, in a simpler app you might want to use local state for everything, including those “caches”. I’m only talking about the ideal user experience [from the first principles](/the-elements-of-ui-engineering/).
 
-**Avoid making truly local state global.** This plays into our topic of “resilience”: there’s fewer surprising synchronization happening between components. As a bonus, this *also* fixes a large class of performance issues. “Over-rendering” is much less of an issue when your state is in the right place.
+**Avoid making truly local state global.** This plays into our topic of “resilience”: there’s fewer surprising synchronization happening between components. As a bonus, this _also_ fixes a large class of performance issues. “Over-rendering” is much less of an issue when your state is in the right place.
 
 ---
 

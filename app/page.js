@@ -20,9 +20,19 @@ export async function getPosts() {
   const dirs = entries
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name);
+
   const fileContents = await Promise.all(
-    dirs.map((dir) => readFile("./public/" + dir + "/index.md", "utf8")),
+    dirs.map(async (dir) => {
+      // Try to read Chinese version first
+      try {
+        return await readFile("./public/" + dir + "/index.zh-hans.md", "utf8");
+      } catch (error) {
+        // If Chinese version doesn't exist, fall back to English
+        return await readFile("./public/" + dir + "/index.md", "utf8");
+      }
+    })
   );
+
   const posts = dirs.map((slug, i) => {
     const fileContent = fileContents[i];
     const { data } = matter(fileContent);

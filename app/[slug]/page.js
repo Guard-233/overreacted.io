@@ -13,8 +13,18 @@ overnight.colors["editor.background"] = "var(--code-bg)";
 
 export default async function PostPage({ params }) {
   const { slug } = await params;
-  const filename = "./public/" + slug + "/index.md";
-  const file = await readFile(filename, "utf8");
+  let filename = "./public/" + slug + "/index.md";
+  let file;
+
+  // Try to read Chinese version first
+  try {
+    file = await readFile("./public/" + slug + "/index.zh-hans.md", "utf8");
+    filename = "./public/" + slug + "/index.zh-hans.md";
+  } catch (error) {
+    // If Chinese version doesn't exist, fall back to English
+    file = await readFile("./public/" + slug + "/index.md", "utf8");
+  }
+
   let postComponents = {};
   try {
     postComponents = await import("../../public/" + slug + "/components.js");
@@ -25,10 +35,10 @@ export default async function PostPage({ params }) {
   }
   const { content, data } = matter(file);
   const discussUrl = `https://bsky.app/search?q=${encodeURIComponent(
-    `https://overreacted.io/${slug}/`,
+    `https://overreacted.io/${slug}/`
   )}`;
   const editUrl = `https://github.com/gaearon/overreacted.io/edit/main/public/${encodeURIComponent(
-    slug,
+    slug
   )}/index.md`;
   return (
     <article>
@@ -100,7 +110,16 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const file = await readFile("./public/" + slug + "/index.md", "utf8");
+  let file;
+
+  // Try to read Chinese version first
+  try {
+    file = await readFile("./public/" + slug + "/index.zh-hans.md", "utf8");
+  } catch (error) {
+    // If Chinese version doesn't exist, fall back to English
+    file = await readFile("./public/" + slug + "/index.md", "utf8");
+  }
+
   let { data } = matter(file);
   return {
     title: data.title + " — overreacted",

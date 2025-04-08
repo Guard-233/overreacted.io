@@ -1,8 +1,8 @@
 ---
 title: How Are Function Components Different from Classes?
-date: '2019-03-03'
+date: "2019-03-03"
 spoiler: They’re a whole different Pokémon.
-cta: 'react'
+cta: "react"
 ---
 
 How do React function components differ from React classes?
@@ -15,7 +15,7 @@ In either case we [don’t recommend](https://reactjs.org/docs/hooks-faq.html#sh
 
 So where does that leave us? Are there any fundamental differences between React functions and classes at all? Of course, there are — in the mental model. **In this post, I will look at the biggest difference between them.** It existed ever since function components were [introduced](https://reactjs.org/blog/2015/09/10/react-v0.14-rc1.html#stateless-function-components) in 2015 but it’s often overlooked:
 
->**Function components capture the rendered values.**
+> **Function components capture the rendered values.**
 
 Let’s unpack what this means.
 
@@ -30,29 +30,27 @@ Consider this component:
 ```jsx
 function ProfilePage(props) {
   const showMessage = () => {
-    alert('Followed ' + props.user);
+    alert("Followed " + props.user);
   };
 
   const handleClick = () => {
     setTimeout(showMessage, 3000);
   };
 
-  return (
-    <button onClick={handleClick}>Follow</button>
-  );
+  return <button onClick={handleClick}>Follow</button>;
 }
 ```
 
 It shows a button that simulates a network request with `setTimeout` and then shows a confirmation alert. For example, if `props.user` is `'Dan'`, it will show `'Followed Dan'` after three seconds. Simple enough.
 
-*(Note it doesn’t matter whether I use arrows or function declarations in the above example. `function handleClick()` would work exactly the same way.)*
+_(Note it doesn’t matter whether I use arrows or function declarations in the above example. `function handleClick()` would work exactly the same way.)_
 
 How do we write it as a class? A naïve translation might look like this:
 
 ```jsx
 class ProfilePage extends React.Component {
   showMessage = () => {
-    alert('Followed ' + this.props.user);
+    alert("Followed " + this.props.user);
   };
 
   handleClick = () => {
@@ -93,18 +91,17 @@ Try this sequence of actions with both buttons:
 
 You will notice a peculiar difference:
 
-* With the above `ProfilePage` **function**, clicking Follow on Dan’s profile and then navigating to Sophie’s would still alert `'Followed Dan'`.
+- With the above `ProfilePage` **function**, clicking Follow on Dan’s profile and then navigating to Sophie’s would still alert `'Followed Dan'`.
 
-* With the above `ProfilePage` **class**, it would alert `'Followed Sophie'`:
+- With the above `ProfilePage` **class**, it would alert `'Followed Sophie'`:
 
 ![Demonstration of the steps](./bug.gif)
 
 ---
 
+In this example, the first behavior is the correct one. **If I follow a person and then navigate to another person’s profile, my component shouldn’t get confused about who I followed.** This class implementation is clearly buggy.
 
-In this example, the first behavior is the correct one. **If I follow a person and then navigate to another person’s profile, my component shouldn’t get confused about who I followed.** This class implementation is clearly buggy. 
-
-*(You should totally [follow Sophie](https://mobile.twitter.com/sophiebits) though.)*
+_(You should totally [follow Sophie](https://mobile.twitter.com/sophiebits) though.)_
 
 ---
 
@@ -119,7 +116,7 @@ class ProfilePage extends React.Component {
   };
 ```
 
-This class method reads from `this.props.user`. Props are immutable in React so they can never change. **However, `this` *is*, and has always been, mutable.**
+This class method reads from `this.props.user`. Props are immutable in React so they can never change. **However, `this` _is_, and has always been, mutable.**
 
 Indeed, that’s the whole purpose of `this` in a class. React itself mutates it over time so that you can read the fresh version in the `render` and lifecycle methods.
 
@@ -140,11 +137,11 @@ One way to do it would be to read `this.props` early during the event, and then 
 ```jsx {2,7}
 class ProfilePage extends React.Component {
   showMessage = (user) => {
-    alert('Followed ' + user);
+    alert("Followed " + user);
   };
 
   handleClick = () => {
-    const {user} = this.props;
+    const { user } = this.props;
     setTimeout(() => this.showMessage(user), 3000);
   };
 
@@ -158,9 +155,9 @@ This [works](https://codesandbox.io/s/3q737pw8lq). However, this approach makes 
 
 Doing so defeats the ergonomics normally afforded by a class. It is also difficult to remember or enforce, which is why people often settle for bugs instead.
 
-Similarly, inlining the `alert` code inside `handleClick` doesn’t answer the bigger problem. We want to structure the code in a way that allows splitting it into more methods *but* also reading the props and state that correspond to the render related to that call. **This problem isn’t even unique to React — you can reproduce it in any UI library that puts data into a mutable object like `this`.**
+Similarly, inlining the `alert` code inside `handleClick` doesn’t answer the bigger problem. We want to structure the code in a way that allows splitting it into more methods _but_ also reading the props and state that correspond to the render related to that call. **This problem isn’t even unique to React — you can reproduce it in any UI library that puts data into a mutable object like `this`.**
 
-Perhaps, we could *bind* the methods in the constructor?
+Perhaps, we could _bind_ the methods in the constructor?
 
 ```jsx {4-5}
 class ProfilePage extends React.Component {
@@ -171,7 +168,7 @@ class ProfilePage extends React.Component {
   }
 
   showMessage() {
-    alert('Followed ' + this.props.user);
+    alert("Followed " + this.props.user);
   }
 
   handleClick() {
@@ -199,7 +196,7 @@ class ProfilePage extends React.Component {
     // Note: we are *inside render*.
     // These aren't class methods.
     const showMessage = () => {
-      alert('Followed ' + props.user);
+      alert("Followed " + props.user);
     };
 
     const handleClick = () => {
@@ -210,7 +207,6 @@ class ProfilePage extends React.Component {
   }
 }
 ```
-
 
 **You’ve “captured” props at the time of render:**
 
@@ -229,16 +225,14 @@ Indeed, we can simplify the code by removing the class “shell” around it:
 ```jsx
 function ProfilePage(props) {
   const showMessage = () => {
-    alert('Followed ' + props.user);
+    alert("Followed " + props.user);
   };
 
   const handleClick = () => {
     setTimeout(showMessage, 3000);
   };
 
-  return (
-    <button onClick={handleClick}>Follow</button>
-  );
+  return <button onClick={handleClick}>Follow</button>;
 }
 ```
 
@@ -249,16 +243,14 @@ It’s a bit more obvious if you destructure `props` in the function definition:
 ```jsx {1,3}
 function ProfilePage({ user }) {
   const showMessage = () => {
-    alert('Followed ' + user);
+    alert("Followed " + user);
   };
 
   const handleClick = () => {
     setTimeout(showMessage, 3000);
   };
 
-  return (
-    <button onClick={handleClick}>Follow</button>
-  );
+  return <button onClick={handleClick}>Follow</button>;
 }
 ```
 
@@ -268,22 +260,22 @@ This is why, in the function version of [this demo](https://codesandbox.io/s/pjq
 
 ![Demo of correct behavior](./fix.gif)
 
-This behavior is correct. *(Although you might want to [follow Sunil](https://mobile.twitter.com/threepointone) too!)*
+This behavior is correct. _(Although you might want to [follow Sunil](https://mobile.twitter.com/threepointone) too!)_
 
 ---
 
 Now we understand the big difference between functions and classes in React:
 
->**Function components capture the rendered values.**
+> **Function components capture the rendered values.**
 
 **With Hooks, the same principle applies to state as well.** Consider this example:
 
 ```jsx
 function MessageThread() {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const showMessage = () => {
-    alert('You said: ' + message);
+    alert("You said: " + message);
   };
 
   const handleSendClick = () => {
@@ -309,7 +301,7 @@ While this isn’t a very good message app UI, it illustrates the same point: if
 
 ---
 
-So we know functions in React capture props and state by default. **But what if we *want* to read the latest props or state that don’t belong to this particular render?** What if we want to [“read them from the future”](https://dev.to/scastiel/react-hooks-get-the-current-state-back-to-the-future-3op2)?
+So we know functions in React capture props and state by default. **But what if we _want_ to read the latest props or state that don’t belong to this particular render?** What if we want to [“read them from the future”](https://dev.to/scastiel/react-hooks-get-the-current-state-back-to-the-future-3op2)?
 
 In classes, you’d do it by reading `this.props` or `this.state` because `this` itself is mutable. React mutates it. In function components, you can also have a mutable value that is shared by all component renders. It’s called a “ref”:
 
@@ -352,7 +344,7 @@ If we read `message` in `showMessage`, we’ll see the message at the time we pr
 
 You can compare the [two](https://codesandbox.io/s/93m5mz9w24) [demos](https://codesandbox.io/s/ox200vw8k9) to see the difference yourself. A ref is a way to “opt out” of the rendering consistency, and can be handy in some cases.
 
-Generally, you should avoid reading or setting refs *during* rendering because they’re mutable. We want to keep the rendering predictable. **However, if we want to get the latest value of a particular prop or state, it can be annoying to update the ref manually.** We could automate it by using an effect:
+Generally, you should avoid reading or setting refs _during_ rendering because they’re mutable. We want to keep the rendering predictable. **However, if we want to get the latest value of a particular prop or state, it can be annoying to update the ref manually.** We could automate it by using an effect:
 
 ```jsx {4-8,11}
 function MessageThread() {
@@ -371,9 +363,9 @@ function MessageThread() {
 
 (Here’s a [demo](https://codesandbox.io/s/yqmnz7xy8x).)
 
-We do the assignment *inside* an effect so that the ref value only changes after the DOM has been updated. This ensures our mutation doesn’t break features like [Time Slicing and Suspense](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html) which rely on interruptible rendering.
+We do the assignment _inside_ an effect so that the ref value only changes after the DOM has been updated. This ensures our mutation doesn’t break features like [Time Slicing and Suspense](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html) which rely on interruptible rendering.
 
-Using a ref like this isn’t necessary very often. **Capturing props or state is usually a better default.** However, it can be handy when dealing with [imperative APIs](/making-setinterval-declarative-with-react-hooks/) like intervals and subscriptions. Remember that you can track *any* value like this — a prop, a state variable, the whole props object, or even a function.
+Using a ref like this isn’t necessary very often. **Capturing props or state is usually a better default.** However, it can be handy when dealing with [imperative APIs](/making-setinterval-declarative-with-react-hooks/) like intervals and subscriptions. Remember that you can track _any_ value like this — a prop, a state variable, the whole props object, or even a function.
 
 This pattern can also be handy for optimizations — such as when `useCallback` identity changes too often. However, [using a reducer](https://reactjs.org/docs/hooks-faq.html#how-to-avoid-passing-callbacks-down) is often a [better solution](https://github.com/ryardley/hooks-perf-issues/pull/3). (A topic for a future blog post!)
 
@@ -381,7 +373,7 @@ This pattern can also be handy for optimizations — such as when `useCallback` 
 
 In this post, we’ve looked at common broken pattern in classes, and how closures help us fix it. However, you might have noticed that when you try to optimize Hooks by specifying a dependency array, you can run into bugs with stale closures. Does it mean that closures are the problem? I don’t think so.
 
-As we’ve seen above, closures actually help us *fix* the subtle problems that are hard to notice. Similarly, they make it much easier to write code that works correctly in the [Concurrent Mode](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html). This is possible because the logic inside the component closes over the correct props and state with which it was rendered.
+As we’ve seen above, closures actually help us _fix_ the subtle problems that are hard to notice. Similarly, they make it much easier to write code that works correctly in the [Concurrent Mode](https://reactjs.org/blog/2018/03/01/sneak-peek-beyond-react-16.html). This is possible because the logic inside the component closes over the correct props and state with which it was rendered.
 
 In all cases I’ve seen so far, **the “stale closures” problems happen due to a mistaken assumption that “functions don’t change” or that “props are always the same”**. This is not the case, as I hope this post has helped to clarify.
 
@@ -391,7 +383,7 @@ When we write the majority of our React code with functions, we need to adjust o
 
 As [Fredrik put it](https://mobile.twitter.com/EphemeralCircle/status/1099095063223812096):
 
->The best mental rule I’ve found so far with hooks is ”code as if any value can change at any time”.
+> The best mental rule I’ve found so far with hooks is ”code as if any value can change at any time”.
 
 Functions are no exception to this rule. It will take some time for this to be common knowledge in React learning materials. It requires some adjustment from the class mindset. But I hope this article helps you see it with fresh eyes.
 

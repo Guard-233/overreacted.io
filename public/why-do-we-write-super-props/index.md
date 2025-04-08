@@ -1,13 +1,12 @@
 ---
 title: Why Do We Write super(props)?
-date: '2018-11-30'
+date: "2018-11-30"
 spoiler: There’s a twist at the end.
 ---
 
+I heard [Hooks](https://reactjs.org/docs/hooks-intro.html) are the new hotness. Ironically, I want to start this blog by describing fun facts about _class_ components. How about that!
 
-I heard [Hooks](https://reactjs.org/docs/hooks-intro.html) are the new hotness. Ironically, I want to start this blog by describing fun facts about *class* components. How about that!
-
-**These gotchas are *not* important for using React productively. But you might find them amusing if you like to dig deeper into how things work.**
+**These gotchas are _not_ important for using React productively. But you might find them amusing if you like to dig deeper into how things work.**
 
 Here’s the first one.
 
@@ -48,13 +47,13 @@ class Checkbox extends React.Component {
 }
 ```
 
-**Why do we call `super`? Can we *not* call it? If we have to call it, what happens if we don’t pass `props`? Are there any other arguments?** Let’s find out.
+**Why do we call `super`? Can we _not_ call it? If we have to call it, what happens if we don’t pass `props`? Are there any other arguments?** Let’s find out.
 
 ---
 
 In JavaScript, `super` refers to the parent class constructor. (In our example, it points to the `React.Component` implementation.)
 
-Importantly, you can’t use `this` in a constructor until *after* you’ve called the parent constructor. JavaScript won’t let you:
+Importantly, you can’t use `this` in a constructor until _after_ you’ve called the parent constructor. JavaScript won’t let you:
 
 ```jsx
 class Checkbox extends React.Component {
@@ -83,12 +82,12 @@ class PolitePerson extends Person {
     super(name);
   }
   greetColleagues() {
-    alert('Good morning folks!');
+    alert("Good morning folks!");
   }
 }
 ```
 
-Imagine using `this` before `super` call *was* allowed. A month later, we might change `greetColleagues` to include the person’s name in the message:
+Imagine using `this` before `super` call _was_ allowed. A month later, we might change `greetColleagues` to include the person’s name in the message:
 
 ```jsx
   greetColleagues() {
@@ -99,7 +98,7 @@ Imagine using `this` before `super` call *was* allowed. A month later, we might 
 
 But we forgot that `this.greetColleagues()` is called before the `super()` call had a chance to set up `this.name`. So `this.name` isn’t even defined yet! As you can see, code like this can be very difficult to think about.
 
-To avoid such pitfalls, **JavaScript enforces that if you want to use `this` in a constructor, you *have to* call `super` first.** Let the parent do its thing! And this limitation applies to React components defined as classes too:
+To avoid such pitfalls, **JavaScript enforces that if you want to use `this` in a constructor, you _have to_ call `super` first.** Let the parent do its thing! And this limitation applies to React components defined as classes too:
 
 ```jsx
   constructor(props) {
@@ -129,12 +128,12 @@ And that’s not far from truth — indeed, that’s [what it does](https://gith
 
 But somehow, even if you call `super()` without the `props` argument, you’ll still be able to access `this.props` in the `render` and other methods. (If you don’t believe me, try it yourself!)
 
-How does *that* work? It turns out that **React also assigns `props` on the instance right after calling *your* constructor:**
+How does _that_ work? It turns out that **React also assigns `props` on the instance right after calling _your_ constructor:**
 
 ```jsx
-  // Inside React
-  const instance = new YourComponent(props);
-  instance.props = props;
+// Inside React
+const instance = new YourComponent(props);
+instance.props = props;
 ```
 
 So even if you forget to pass `props` to `super()`, React would still set them right afterwards. There is a reason for that.
@@ -143,7 +142,7 @@ When React added support for classes, it didn’t just add support for ES6 class
 
 So does this mean you can just write `super()` instead of `super(props)`?
 
-**Probably not because it’s still confusing.** Sure, React would later assign `this.props` *after* your constructor has run. But `this.props` would still be undefined *between* the `super` call and the end of your constructor:
+**Probably not because it’s still confusing.** Sure, React would later assign `this.props` _after_ your constructor has run. But `this.props` would still be undefined _between_ the `super` call and the end of your constructor:
 
 ```jsx {14}
 // Inside React
@@ -158,20 +157,20 @@ class Component {
 class Button extends React.Component {
   constructor(props) {
     super(); // 😬 We forgot to pass props
-    console.log(props);      // ✅ {}
-    console.log(this.props); // 😬 undefined 
+    console.log(props); // ✅ {}
+    console.log(this.props); // 😬 undefined
   }
   // ...
 }
 ```
 
-It can be even more challenging to debug if this happens in some method that’s called *from* the constructor. **And that’s why I recommend always passing down `super(props)`, even though it isn’t strictly necessary:**
+It can be even more challenging to debug if this happens in some method that’s called _from_ the constructor. **And that’s why I recommend always passing down `super(props)`, even though it isn’t strictly necessary:**
 
 ```jsx
 class Button extends React.Component {
   constructor(props) {
     super(props); // ✅ We passed props
-    console.log(props);      // ✅ {}
+    console.log(props); // ✅ {}
     console.log(this.props); // ✅ {}
   }
   // ...
@@ -180,7 +179,7 @@ class Button extends React.Component {
 
 This ensures `this.props` is set even before the constructor exits.
 
------
+---
 
 There’s one last bit that longtime React users might be curious about.
 

@@ -1,19 +1,19 @@
 ---
 title: Why Isn’t X a Hook?
-date: '2019-01-26'
+date: "2019-01-26"
 spoiler: Just because we can, doesn’t mean we should.
-cta: 'react'
+cta: "react"
 ---
 
-Since the first alpha version of [React Hooks](https://reactjs.org/hooks) was released, there is a question that keeps coming up in discussions: “Why isn’t *\<some other API\>* a Hook?”
+Since the first alpha version of [React Hooks](https://reactjs.org/hooks) was released, there is a question that keeps coming up in discussions: “Why isn’t _\<some other API\>_ a Hook?”
 
-To remind you, here’s a few things that *are* Hooks:
+To remind you, here’s a few things that _are_ Hooks:
 
-* [`useState()`](https://reactjs.org/docs/hooks-reference.html#usestate) lets you declare a state variable.
-* [`useEffect()`](https://reactjs.org/docs/hooks-reference.html#useeffect) lets you declare a side effect.
-* [`useContext()`](https://reactjs.org/docs/hooks-reference.html#usecontext) lets you read some context.
+- [`useState()`](https://reactjs.org/docs/hooks-reference.html#usestate) lets you declare a state variable.
+- [`useEffect()`](https://reactjs.org/docs/hooks-reference.html#useeffect) lets you declare a side effect.
+- [`useContext()`](https://reactjs.org/docs/hooks-reference.html#usecontext) lets you read some context.
 
-But there are some other APIs, like `React.memo()` and `<Context.Provider>`, that are *not* Hooks. Commonly proposed Hook versions of them would be *noncompositional* or *antimodular*. This article will help you understand why.
+But there are some other APIs, like `React.memo()` and `<Context.Provider>`, that are _not_ Hooks. Commonly proposed Hook versions of them would be _noncompositional_ or _antimodular_. This article will help you understand why.
 
 **Note: this post is a deep dive for folks who are interested in API discussions. You don’t need to think about any of this to be productive with React!**
 
@@ -25,11 +25,11 @@ There are two important properties that we want React APIs to preserve:
 
 2. **Debugging:** We want the bugs to be [easy to find](/the-bug-o-notation/) as the application grows. One of React's best features is that if you see something wrong rendered, you can walk up the tree until you find which component's prop or state caused the mistake.
 
-These two constraints put together can tell us what can or *cannot* be a Hook. Let’s try a few examples.
+These two constraints put together can tell us what can or _cannot_ be a Hook. Let’s try a few examples.
 
 ---
 
-##  A Real Hook: `useState()`
+## A Real Hook: `useState()`
 
 ### Composition
 
@@ -59,7 +59,7 @@ Adding a new unconditional `useState()` call is always safe. You don’t need to
 
 ### Debugging
 
-Hooks are useful because you can pass values *between* Hooks:
+Hooks are useful because you can pass values _between_ Hooks:
 
 ```jsx {4,12,14}
 function useWindowWidth() {
@@ -76,11 +76,7 @@ function Comment() {
   const width = useWindowWidth();
   const isMobile = width < MOBILE_VIEWPORT;
   const theme = useTheme(isMobile);
-  return (
-    <section className={theme.comment}>
-      {/* ... */}
-    </section>
-  );
+  return <section className={theme.comment}>{/* ... */}</section>;
 }
 ```
 
@@ -90,7 +86,7 @@ Let's say the CSS class we get from `theme.comment` is wrong. How would we debug
 
 Maybe we’d see that `theme` is wrong but `width` and `isMobile` are correct. That would tell us the problem is inside `useTheme()`. Or perhaps we'd see that `width` itself is wrong. That would tell us to look into `useWindowWidth()`.
 
-**A single look at the intermediate values tells us which of the Hooks at the top level contains the bug.** We don't need to look at *all* of their implementations.
+**A single look at the intermediate values tells us which of the Hooks at the top level contains the bug.** We don't need to look at _all_ of their implementations.
 
 Then we can “zoom in” on the one that has a bug, and repeat.
 
@@ -122,13 +118,9 @@ Whether you call it `useShouldComponentUpdate()`, `usePure()`, `useSkipRender()`
 ```jsx
 function Button({ color }) {
   // ⚠️ Not a real API
-  useBailout(prevColor => prevColor !== color, color);
+  useBailout((prevColor) => prevColor !== color, color);
 
-  return (
-    <button className={'button-' + color}>  
-      OK
-    </button>
-  )
+  return <button className={"button-" + color}>OK</button>;
 }
 ```
 
@@ -143,10 +135,10 @@ function useFriendStatus(friendID) {
   const [isOnline, setIsOnline] = useState(null);
 
   // ⚠️ Not a real API
-  useBailout(prevIsOnline => prevIsOnline !== isOnline, isOnline);
+  useBailout((prevIsOnline) => prevIsOnline !== isOnline, isOnline);
 
   useEffect(() => {
-    const handleStatusChange = status => setIsOnline(status.isOnline);
+    const handleStatusChange = (status) => setIsOnline(status.isOnline);
     ChatAPI.subscribe(friendID, handleStatusChange);
     return () => ChatAPI.unsubscribe(friendID, handleStatusChange);
   });
@@ -156,14 +148,14 @@ function useFriendStatus(friendID) {
 
 function useWindowWidth() {
   const [width, setWidth] = useState(window.innerWidth);
-  
+
   // ⚠️ Not a real API
-  useBailout(prevWidth => prevWidth !== width, width);
+  useBailout((prevWidth) => prevWidth !== width, width);
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   });
 
   return width;
@@ -172,7 +164,6 @@ function useWindowWidth() {
 
 Now what happens if you use them both in the same component?
 
-
 ```jsx {2,3}
 function ChatThread({ friendID, isTyping }) {
   const width = useWindowWidth();
@@ -180,7 +171,7 @@ function ChatThread({ friendID, isTyping }) {
   return (
     <ChatLayout width={width}>
       <FriendStatus isOnline={isOnline} />
-      {isTyping && 'Typing...'}
+      {isTyping && "Typing..."}
     </ChatLayout>
   );
 }
@@ -190,9 +181,9 @@ When does it re-render?
 
 If every `useBailout()` call has the power to skip an update, then updates from `useWindowWidth()` would be blocked by `useFriendStatus()`, and vice versa. **These Hooks would break each other.**
 
-However, if `useBailout()` was only respected when *all* calls to it inside a single component “agree” to block an update, our `ChatThread` would fail to update on changes to the `isTyping` prop.
+However, if `useBailout()` was only respected when _all_ calls to it inside a single component “agree” to block an update, our `ChatThread` would fail to update on changes to the `isTyping` prop.
 
-Even worse, with these semantics **any newly added Hooks to `ChatThread` would break if they don’t *also* call `useBailout()`**. Otherwise, they can’t “vote against” the bailout inside `useWindowWidth()` and `useFriendStatus()`.
+Even worse, with these semantics **any newly added Hooks to `ChatThread` would break if they don’t _also_ call `useBailout()`**. Otherwise, they can’t “vote against” the bailout inside `useWindowWidth()` and `useFriendStatus()`.
 
 **Verdict:** 🔴 `useBailout()` breaks composition. Adding it to a Hook breaks state updates in other Hooks. We want the APIs to be [antifragile](/optimized-for-change/), and this behavior is pretty much the opposite.
 
@@ -209,7 +200,7 @@ function ChatThread({ friendID, isTyping }) {
   return (
     <ChatLayout width={width}>
       <FriendStatus isOnline={isOnline} />
-      {isTyping && 'Typing...'}
+      {isTyping && "Typing..."}
     </ChatLayout>
   );
 }
@@ -217,9 +208,9 @@ function ChatThread({ friendID, isTyping }) {
 
 Let’s say the `Typing...` label doesn’t appear when we expect, even though somewhere many layers above the prop is changing. How do we debug it?
 
-**Normally, in React you can confidently answer this question by looking *up*.** If `ChatThread` doesn’t get a new `isTyping` value, we can open the component that renders `<ChatThread isTyping={myVar} />` and check `myVar`, and so on. At one of these levels, we’ll either find a buggy `shouldComponentUpdate()` bailout, or an incorrect `isTyping` value being passed down. One look at each component in the chain is usually enough to locate the source of the problem.
+**Normally, in React you can confidently answer this question by looking _up_.** If `ChatThread` doesn’t get a new `isTyping` value, we can open the component that renders `<ChatThread isTyping={myVar} />` and check `myVar`, and so on. At one of these levels, we’ll either find a buggy `shouldComponentUpdate()` bailout, or an incorrect `isTyping` value being passed down. One look at each component in the chain is usually enough to locate the source of the problem.
 
-However, if this `useBailout()` Hook was real, you would never know the reason an update was skipped until you checked *every single custom Hook* (deeply) used by our `ChatThread` and components in its owner chain. Since every parent component can *also* use custom Hooks, this [scales](/the-bug-o-notation/) terribly.
+However, if this `useBailout()` Hook was real, you would never know the reason an update was skipped until you checked _every single custom Hook_ (deeply) used by our `ChatThread` and components in its owner chain. Since every parent component can _also_ use custom Hooks, this [scales](/the-bug-o-notation/) terribly.
 
 It’s like if you were looking for a screwdriver in a chest of drawers, and each drawer contained a bunch of smaller chests of drawers, and you don’t know how deep the rabbit hole goes.
 
@@ -227,12 +218,12 @@ It’s like if you were looking for a screwdriver in a chest of drawers, and eac
 
 ---
 
-We just looked at one real Hook, `useState()`, and a common suggestion that is intentionally *not* a Hook — `useBailout()`. We compared them through the prism of Composition and Debugging, and discussed why one of them works and the other one doesn’t.
+We just looked at one real Hook, `useState()`, and a common suggestion that is intentionally _not_ a Hook — `useBailout()`. We compared them through the prism of Composition and Debugging, and discussed why one of them works and the other one doesn’t.
 
-While there is no “Hook version” of `memo()` or `shouldComponentUpdate()`, React *does* provide a Hook called [`useMemo()`](https://reactjs.org/docs/hooks-reference.html#usememo). It serves a similar purpose, but its semantics are different enough to not run into the pitfalls described above.
+While there is no “Hook version” of `memo()` or `shouldComponentUpdate()`, React _does_ provide a Hook called [`useMemo()`](https://reactjs.org/docs/hooks-reference.html#usememo). It serves a similar purpose, but its semantics are different enough to not run into the pitfalls described above.
 
 `useBailout()` is just one example of something that doesn’t work well as a Hook. But there are a few others — for example, `useProvider()`, `useCatch()`, or `useSuspense()`.
 
 Can you see why?
 
-*(Whispers: Composition... Debugging...)*
+_(Whispers: Composition... Debugging...)_
